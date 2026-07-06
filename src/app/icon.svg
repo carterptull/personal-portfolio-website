@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" shape-rendering="crispEdges">
+  <!-- Simplified favicon: CRT bezel + scarlet pixel "C". Reads at 16x16. -->
+  <rect x="0" y="0" width="16" height="16" fill="#DFDFDF"/>
+  <rect x="0" y="0" width="16" height="1" fill="#FFFFFF"/>
+  <rect x="0" y="0" width="1" height="16" fill="#FFFFFF"/>
+  <rect x="15" y="0" width="1" height="16" fill="#808080"/>
+  <rect x="0" y="15" width="16" height="1" fill="#808080"/>
+  <rect x="2" y="2" width="12" height="12" fill="#0A1A2E"/>
+  <rect x="5" y="4" width="6" height="2" fill="#BB0000"/>
+  <rect x="5" y="4" width="2" height="8" fill="#BB0000"/>
+  <rect x="5" y="10" width="6" height="2" fill="#BB0000"/>
+</svg>

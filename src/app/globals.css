@@ -1,0 +1,365 @@
+@import "tailwindcss";
+
+@theme {
+  --color-scarlet: #bb0000;
+  --color-scarlet-2: #e23a3a;
+  --color-chrome: #c0c0c0;
+  --color-chrome-light: #dfdfdf;
+  --color-chrome-dark: #808080;
+  --color-chrome-inactive: #757575;
+  --color-ink: #0a0a0a;
+  --color-void: #0d0d0f;
+  --color-led: #22c55e;
+  --color-screen: #0a1a2e;
+
+  --font-pixel: var(--font-ms), tahoma, "Segoe UI", sans-serif;
+  --font-sans: system-ui, "Segoe UI", roboto, helvetica, arial, sans-serif;
+  --font-mono: "Cascadia Mono", consolas, "Courier New", monospace;
+}
+
+/* ---------- base ---------- */
+
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  background-color: var(--color-scarlet);
+  background-image:
+    radial-gradient(ellipse at center, rgba(255, 255, 255, 0.06), transparent 70%),
+    repeating-linear-gradient(
+      45deg,
+      rgba(0, 0, 0, 0.05) 0px,
+      rgba(0, 0, 0, 0.05) 2px,
+      transparent 2px,
+      transparent 8px
+    );
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: var(--color-scarlet);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 1px;
+}
+
+.font-pixel {
+  font-family: var(--font-pixel);
+  -webkit-font-smoothing: none;
+}
+
+/* ---------- bevels (98.css recipes as tokens) ---------- */
+
+.bevel-up {
+  box-shadow:
+    inset -1px -1px #0a0a0a,
+    inset 1px 1px #fff,
+    inset -2px -2px #808080,
+    inset 2px 2px #dfdfdf;
+}
+
+.bevel-down {
+  box-shadow:
+    inset -1px -1px #fff,
+    inset 1px 1px #0a0a0a,
+    inset -2px -2px #dfdfdf,
+    inset 2px 2px #808080;
+}
+
+.bevel-window {
+  box-shadow:
+    inset -1px -1px #0a0a0a,
+    inset 1px 1px #dfdfdf,
+    inset -2px -2px #808080,
+    inset 2px 2px #fff;
+}
+
+.bevel-field {
+  box-shadow:
+    inset -1px -1px #fff,
+    inset 1px 1px #808080,
+    inset -2px -2px #dfdfdf,
+    inset 2px 2px #0a0a0a;
+}
+
+.bevel-thin-up {
+  box-shadow:
+    inset -1px -1px #808080,
+    inset 1px 1px #fff;
+}
+
+.bevel-thin-down {
+  box-shadow:
+    inset -1px -1px #fff,
+    inset 1px 1px #808080;
+}
+
+/* ---------- controls ---------- */
+
+.btn95 {
+  background: var(--color-chrome);
+  color: var(--color-ink);
+  font-family: var(--font-pixel);
+  -webkit-font-smoothing: none;
+  box-shadow:
+    inset -1px -1px #0a0a0a,
+    inset 1px 1px #fff,
+    inset -2px -2px #808080,
+    inset 2px 2px #dfdfdf;
+  padding: 4px 12px;
+  min-height: 24px;
+  user-select: none;
+}
+
+.btn95:active,
+.btn95[aria-pressed="true"],
+.btn95[aria-expanded="true"] {
+  box-shadow:
+    inset -1px -1px #fff,
+    inset 1px 1px #0a0a0a,
+    inset -2px -2px #dfdfdf,
+    inset 2px 2px #808080;
+}
+
+.btn95:focus-visible {
+  outline: 1px dotted var(--color-ink);
+  outline-offset: -5px;
+}
+
+.titlebar-active {
+  background: linear-gradient(90deg, #bb0000, #e23a3a);
+  color: #fff;
+}
+
+/* #757575 (not classic #808080) so white titlebar text passes WCAG AA */
+.titlebar-inactive {
+  background: var(--color-chrome-inactive);
+  color: #fff;
+}
+
+.title-btn {
+  width: 18px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-chrome);
+  color: var(--color-ink);
+  box-shadow:
+    inset -1px -1px #0a0a0a,
+    inset 1px 1px #fff,
+    inset -2px -2px #808080,
+    inset 2px 2px #dfdfdf;
+}
+
+.title-btn:active {
+  box-shadow:
+    inset -1px -1px #fff,
+    inset 1px 1px #0a0a0a,
+    inset -2px -2px #dfdfdf,
+    inset 2px 2px #808080;
+}
+
+.title-btn:focus-visible {
+  outline: 1px dotted var(--color-ink);
+  outline-offset: -4px;
+}
+
+/* ---------- desktop icons ---------- */
+
+.desktop-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 84px;
+  padding: 8px 4px;
+  color: #fff;
+  font-family: var(--font-pixel);
+  -webkit-font-smoothing: none;
+  font-size: 13px;
+  text-align: center;
+  text-shadow: 1px 1px 0 #0a0a0a;
+  user-select: none;
+}
+
+.desktop-icon:focus-visible,
+.desktop-icon:hover {
+  outline: 1px dotted #fff;
+  outline-offset: -2px;
+}
+
+.desktop-icon .icon-label {
+  padding: 1px 3px;
+}
+
+.desktop-icon:focus-visible .icon-label {
+  background: var(--color-scarlet);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.6);
+}
+
+/* ---------- scrollbars inside windows ---------- */
+
+.win-scroll {
+  scrollbar-width: auto;
+  scrollbar-color: var(--color-chrome) #e6e6e6;
+}
+
+.win-scroll::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+}
+
+.win-scroll::-webkit-scrollbar-track {
+  background: #e6e6e6;
+}
+
+.win-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-chrome);
+  box-shadow:
+    inset -1px -1px #0a0a0a,
+    inset 1px 1px #fff,
+    inset -2px -2px #808080,
+    inset 2px 2px #dfdfdf;
+}
+
+/* ---------- SSR (no-JS) document layer ---------- */
+
+body.desktop-active .ssr-layer,
+body.desktop-active > a.skip-link {
+  display: none;
+}
+
+.ssr-layer {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+}
+
+/* ---------- skip link ---------- */
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  z-index: 10000;
+  background: #fff;
+  color: var(--color-ink);
+  padding: 8px 16px;
+  border: 2px solid var(--color-ink);
+}
+
+.skip-link:focus {
+  left: 8px;
+  top: 8px;
+}
+
+/* ---------- window transitions ---------- */
+
+@keyframes win-open {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.win-anim {
+  animation: win-open 120ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .win-anim {
+    animation: none;
+  }
+}
+
+/* ---------- CRT overlay ---------- */
+
+.crt-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  pointer-events: none;
+  background-image:
+    radial-gradient(ellipse at center, transparent 55%, rgba(10, 10, 10, 0.22)),
+    repeating-linear-gradient(
+      0deg,
+      rgba(10, 10, 15, 0.09) 0px,
+      rgba(10, 10, 15, 0.09) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+}
+
+@keyframes crt-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.92;
+  }
+}
+
+.crt-overlay {
+  animation: crt-flicker 4s steps(2) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crt-overlay {
+    animation: none;
+  }
+}
+
+/* ---------- boot screen ---------- */
+
+.boot-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9500;
+  background: var(--color-void);
+  color: #d8d8d8;
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+
+@keyframes boot-caret {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.boot-caret {
+  display: inline-block;
+  width: 8px;
+  height: 14px;
+  background: #d8d8d8;
+  animation: boot-caret 0.8s steps(1) infinite;
+}
+
+@keyframes boot-bar {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(400%);
+  }
+}
+
+.boot-bar-chip {
+  animation: boot-bar 1.1s linear infinite;
+}

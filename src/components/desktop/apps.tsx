@@ -1,0 +1,188 @@
+"use client";
+
+import type { ComponentType, ReactNode } from "react";
+import dynamic from "next/dynamic";
+import { getProject, projects } from "@/content/projects";
+import { useWindowStore } from "@/store/windowStore";
+import {
+  IconComputer,
+  IconContact,
+  IconDocument,
+  IconFolder,
+  IconMedia,
+  IconSkills,
+  IconWordDoc,
+} from "./icons";
+
+const loading = () => (
+  <p className="font-pixel p-3 text-sm" role="status">
+    Loading…
+  </p>
+);
+
+const AboutContent = dynamic(
+  () => import("@/components/content/AboutContent").then((m) => m.AboutContent),
+  { loading }
+);
+const ProjectsIndexContent = dynamic(
+  () =>
+    import("@/components/content/ProjectsIndexContent").then(
+      (m) => m.ProjectsIndexContent
+    ),
+  { loading }
+);
+const ProjectContent = dynamic(
+  () => import("@/components/content/ProjectContent").then((m) => m.ProjectContent),
+  { loading }
+);
+const SkillsContent = dynamic(
+  () => import("@/components/content/SkillsContent").then((m) => m.SkillsContent),
+  { loading }
+);
+const ContactContent = dynamic(
+  () => import("@/components/content/ContactContent").then((m) => m.ContactContent),
+  { loading }
+);
+const MediaPlayerContent = dynamic(
+  () =>
+    import("@/components/content/MediaPlayerContent").then(
+      (m) => m.MediaPlayerContent
+    ),
+  { loading }
+);
+const ResumeContent = dynamic(
+  () => import("@/components/content/ResumeContent").then((m) => m.ResumeContent),
+  { loading }
+);
+
+export type AppDef = {
+  title: string;
+  Icon: ComponentType<{ size?: number }>;
+  w: number;
+  h: number;
+  route?: string;
+  render: () => ReactNode;
+};
+
+export const DESKTOP_APP_IDS = [
+  "about",
+  "media",
+  "projects",
+  "skills",
+  "resume",
+  "contact",
+] as const;
+
+const APPS: Record<string, AppDef> = {
+  about: {
+    title: "About Me",
+    Icon: IconComputer,
+    w: 580,
+    h: 480,
+    route: "/about",
+    render: () => <AboutContent onWatch={() => openApp("media")} />,
+  },
+  media: {
+    title: "Media Player",
+    Icon: IconMedia,
+    w: 480,
+    h: 520,
+    render: () => <MediaPlayerContent />,
+  },
+  projects: {
+    title: "Projects",
+    Icon: IconFolder,
+    w: 560,
+    h: 460,
+    route: "/projects",
+    render: () => (
+      <ProjectsIndexContent onOpenProject={(slug) => openApp(`project:${slug}`)} />
+    ),
+  },
+  skills: {
+    title: "Skills — System Properties",
+    Icon: IconSkills,
+    w: 460,
+    h: 480,
+    render: () => <SkillsContent />,
+  },
+  resume: {
+    title: "Resume",
+    Icon: IconWordDoc,
+    w: 640,
+    h: 720,
+    render: () => <ResumeContent />,
+  },
+  contact: {
+    title: "Contact",
+    Icon: IconContact,
+    w: 440,
+    h: 340,
+    route: "/contact",
+    render: () => <ContactContent />,
+  },
+};
+
+export function getAppDef(appId: string): AppDef | null {
+  if (APPS[appId]) return APPS[appId];
+  if (appId.startsWith("project:")) {
+    const project = getProject(appId.slice("project:".length));
+    if (!project) return null;
+    return {
+      title: project.title,
+      Icon: IconDocument,
+      w: 620,
+      h: 520,
+      route: `/projects/${project.slug}`,
+      render: () => <ProjectContent project={project} />,
+    };
+  }
+  return null;
+}
+
+export function appIdForPath(pathname: string): string | null {
+  if (pathname === "/about") return "about";
+  if (pathname === "/projects") return "projects";
+  if (pathname === "/contact") return "contact";
+  const match = pathname.match(/^\/projects\/([\w-]+)\/?$/);
+  if (match && getProject(match[1])) return `project:${match[1]}`;
+  return null;
+}
+
+// Remembers which element opened each window so close can return focus to it.
+const triggers = new Map<string, HTMLElement>();
+
+export function openApp(appId: string, trigger?: HTMLElement | null) {
+  const def = getAppDef(appId);
+  if (!def) return;
+  if (trigger) triggers.set(appId, trigger);
+
+  const store = useWindowStore.getState();
+  const existing = store.windows[appId];
+  let rect = existing?.rect;
+  if (!rect) {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const w = Math.min(def.w, vw - 16);
+    const h = Math.min(def.h, vh - 72);
+    // Cascade starts right of the icon column so icons stay clickable.
+    const offset = (store.order.length % 6) * 28;
+    rect = {
+      x: Math.max(8, Math.min(120 + offset, vw - w - 8)),
+      y: Math.max(8, Math.min(32 + offset, vh - h - 56)),
+      w,
+      h,
+    };
+  }
+  store.open({ id: appId, appId, title: def.title, rect });
+}
+
+export function closeApp(appId: string) {
+  useWindowStore.getState().close(appId);
+  const trigger = triggers.get(appId);
+  if (trigger?.isConnected) {
+    requestAnimationFrame(() => trigger.focus());
+  }
+}
+
+export { projects };
