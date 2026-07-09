@@ -53,8 +53,6 @@ Key modules:
   has no `seeks`/availability fields.
 - One scarlet: **#BB0000** (`#E23A3A` allowed only as the title-bar gradient end).
   Never `#d0201f`.
-- Do **not** mention the NFL Matchup Predictor or the Universal Web Scraper hackfest
-  project anywhere (held back by owner until ready).
 - Content must render in server HTML; never fetch/inject page content client-side only.
 - Every desktop interaction needs a keyboard + touch path; respect `prefers-reduced-motion`
   (skip boot, screensaver, animations).
