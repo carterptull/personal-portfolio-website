@@ -37,8 +37,10 @@ Two layers, same content:
 - **Desktop layer** — a client-side Win95 shell hydrates on top and presents the same
   content components inside floating windows (full-screen apps with a Back button on mobile).
 
-More detail in [CLAUDE.md](CLAUDE.md) (architecture map) and
-[DECISIONS.md](DECISIONS.md) (why each choice was made).
+More detail in [CLAUDE.md](CLAUDE.md) (architecture map),
+[DECISIONS.md](DECISIONS.md) (why each choice was made),
+[VERSION.md](VERSION.md) (current version), and
+[CHANGELOG.md](CHANGELOG.md) (release history).
 
 ## Project structure
 

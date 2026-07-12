@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useWindowStore } from "@/store/windowStore";
-import { CONTACT } from "@/lib/site";
+import { CONTACT, COPYRIGHT, SITE_VERSION } from "@/lib/site";
 import { DESKTOP_APP_IDS, getAppDef, openApp } from "./apps";
 
 function Clock() {
@@ -123,6 +123,10 @@ function StartMenu({
             {link.label} ↗
           </a>
         ))}
+        <hr className="my-1 border-t border-chrome-dark" aria-hidden="true" />
+        <p className="font-pixel px-2 py-1 text-[10px] text-neutral-600">
+          v{SITE_VERSION} · {COPYRIGHT}
+        </p>
       </div>
     </div>
   );
@@ -197,6 +201,12 @@ export function Taskbar({
         })}
       </div>
 
+      <span
+        className="font-pixel hidden px-1.5 text-[10px] text-neutral-600 sm:inline"
+        title={`Created by Carter Tull · ${COPYRIGHT}`}
+      >
+        v{SITE_VERSION}
+      </span>
       <button
         type="button"
         className="btn95 py-1 text-xs"

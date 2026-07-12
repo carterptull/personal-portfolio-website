@@ -227,3 +227,6 @@ next-env.d.ts
 .env.local
 .env*.local
 npm-debug.log*
+
+# Claude Code local settings
+.claude/
