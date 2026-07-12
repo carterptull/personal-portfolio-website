@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useWindowStore } from "@/store/windowStore";
+import { COPYRIGHT, SITE_VERSION } from "@/lib/site";
 import { closeApp, getAppDef } from "./apps";
 import { IconGrid } from "./IconGrid";
 
@@ -92,6 +93,12 @@ export function MobileShell() {
           </svg>
           Carter Tull
         </button>
+        <span
+          className="font-pixel text-[10px] text-neutral-600"
+          title={COPYRIGHT}
+        >
+          v{SITE_VERSION}
+        </span>
         <span className="font-pixel bevel-thin-down px-2 py-1 text-xs tabular-nums">
           {now.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}
         </span>
