@@ -13,7 +13,7 @@ npm run lint     # eslint
 ```
 
 `NEXT_PUBLIC_SITE_URL` sets the canonical URL (falls back to `http://localhost:3000`);
-see `.env.local.example`. Vercel Analytics/Speed Insights only render when `VERCEL` is set.
+set it in `.env.local` when deploying. Vercel Analytics/Speed Insights only render when `VERCEL` is set.
 
 ## Architecture — dual layer (the one rule that matters)
 

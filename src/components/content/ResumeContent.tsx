@@ -3,7 +3,7 @@ const RESUME_PDF = "/Carter-Tull-Resume.pdf";
 export function ResumeContent() {
   return (
     <div className="flex h-full min-h-80 flex-col gap-2">
-      <p className="font-pixel text-sm">
+      <p className="flex gap-4 font-pixel text-sm">
         <a
           href={RESUME_PDF}
           target="_blank"
@@ -12,7 +12,6 @@ export function ResumeContent() {
         >
           Open in new tab ↗
         </a>
-        {" · "}
         <a
           href={RESUME_PDF}
           download="Carter-Tull-Resume.pdf"
@@ -28,7 +27,7 @@ export function ResumeContent() {
         aria-label="Carter Tull resume PDF"
       >
         <p className="text-sm">
-          This browser can&apos;t display PDFs inline — use the links above.
+          This browser can&apos;t display PDFs inline. Use the links above.
         </p>
       </object>
     </div>

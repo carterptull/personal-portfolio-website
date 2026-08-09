@@ -2,10 +2,10 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Carter Tull — Software Engineer",
+    name: "Carter Tull - Software Engineer",
     short_name: "Carter Tull",
     description:
-      "Portfolio of Carter Tull, Automation Developer at ConstructConnect — built as a retro Windows 95 desktop.",
+      "Portfolio of Carter Tull, software engineer at ConstructConnect, built as a retro Windows 95 desktop.",
     start_url: "/",
     display: "standalone",
     background_color: "#0D0D0F",

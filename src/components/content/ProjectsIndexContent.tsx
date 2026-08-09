@@ -9,8 +9,8 @@ export function ProjectsIndexContent({
   return (
     <div className="space-y-4">
       <p className="text-sm text-neutral-700">
-        Selected work — written up as project descriptions (problem, approach,
-        outcome) rather than live demos.
+        Click on project titles for a full write-up: problem, approach, outcome,
+        and links to repositories where the source is public.
       </p>
       <ul className="space-y-4">
         {projects.map((p) => (

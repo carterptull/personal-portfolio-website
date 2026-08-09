@@ -25,7 +25,7 @@ export function IconGrid({ mobile = false }: { mobile?: boolean }) {
             onClick={(e) => openApp(appId, e.currentTarget)}
           >
             <def.Icon size={mobile ? 40 : 34} />
-            <span className="icon-label">{def.title.split(" — ")[0]}</span>
+            <span className="icon-label">{def.title.split(/\s[-–—]\s/)[0]}</span>
           </button>
         );
       })}

@@ -6,7 +6,7 @@ export function ProjectContent({ project }: { project: Project }) {
       <header className="space-y-1">
         <h2 className="font-pixel text-xl font-bold">{project.title}</h2>
         <p className="text-sm text-neutral-700">
-          {project.role} · {project.timeframe}
+          {project.role}, {project.timeframe}
         </p>
         <p className="flex flex-wrap gap-1 pt-1" aria-label="Tech stack">
           {project.stack.map((s) => (
@@ -47,14 +47,32 @@ export function ProjectContent({ project }: { project: Project }) {
 
       <footer className="bevel-thin-down bg-white p-2 text-sm text-neutral-700">
         <p>Status: {project.status}</p>
-        {project.links.repo && (
-          <p>
-            <a
-              href={project.links.repo}
-              className="text-scarlet underline underline-offset-2"
-            >
-              Source on GitHub
-            </a>
+        {(project.links.repo || project.links.npm || project.links.live) && (
+          <p className="flex flex-wrap gap-x-4">
+            {project.links.repo && (
+              <a
+                href={project.links.repo}
+                className="text-scarlet underline underline-offset-2"
+              >
+                Source on GitHub
+              </a>
+            )}
+            {project.links.npm && (
+              <a
+                href={project.links.npm}
+                className="text-scarlet underline underline-offset-2"
+              >
+                Published on npm
+              </a>
+            )}
+            {project.links.live && (
+              <a
+                href={project.links.live}
+                className="text-scarlet underline underline-offset-2"
+              >
+                Live site
+              </a>
+            )}
           </p>
         )}
       </footer>

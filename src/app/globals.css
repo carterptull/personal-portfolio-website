@@ -261,14 +261,21 @@ body.desktop-active > a.skip-link {
 
 /* ---------- window transitions ---------- */
 
+/*
+ * Animates the standalone `scale` property, not `transform` — the window's
+ * position is also driven by `transform` (translate3d) via inline style, and
+ * a `transform` keyframe would replace that value for the animation's
+ * duration, snapping the window to the top-left corner of its containing
+ * block until the animation finishes. `scale` composes independently.
+ */
 @keyframes win-open {
   from {
     opacity: 0;
-    transform: scale(0.96);
+    scale: 0.96;
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    scale: 1;
   }
 }
 

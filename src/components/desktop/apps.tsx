@@ -100,7 +100,7 @@ const APPS: Record<string, AppDef> = {
     ),
   },
   skills: {
-    title: "Skills — System Properties",
+    title: "Skills",
     Icon: IconSkills,
     w: 460,
     h: 480,

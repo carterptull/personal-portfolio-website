@@ -66,7 +66,7 @@ export function MobileShell() {
 
   return (
     <div className="absolute inset-0">
-      <h1 className="sr-only">Carter Tull — desktop</h1>
+      <h1 className="sr-only">Carter Tull desktop</h1>
       <IconGrid mobile />
       {activeId && <FullScreenApp id={activeId} />}
       <div
@@ -76,7 +76,7 @@ export function MobileShell() {
       >
         <button
           type="button"
-          aria-label="Home — show desktop"
+          aria-label="Home, show desktop"
           className="btn95 font-pixel flex items-center gap-1.5 px-2 py-1.5 text-sm font-bold"
           onClick={() => {
             const s = useWindowStore.getState();

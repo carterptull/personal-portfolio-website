@@ -25,8 +25,8 @@ npm run build
 npm run start
 ```
 
-Optional: copy `.env.local.example` to `.env.local` and set `NEXT_PUBLIC_SITE_URL`
-(defaults to `http://localhost:3000`; set to the real domain when deploying).
+Optional: set `NEXT_PUBLIC_SITE_URL` in a local `.env.local` file (defaults to
+`http://localhost:3000`; set to the real domain when deploying).
 
 ## How it's put together
 
@@ -38,8 +38,7 @@ Two layers, same content:
   content components inside floating windows (full-screen apps with a Back button on mobile).
 
 More detail in [CLAUDE.md](CLAUDE.md) (architecture map),
-[DECISIONS.md](DECISIONS.md) (why each choice was made),
-[VERSION.md](VERSION.md) (current version), and
+[DECISIONS.md](DECISIONS.md) (why each choice was made), and
 [CHANGELOG.md](CHANGELOG.md) (release history).
 
 ## Project structure
@@ -56,3 +55,7 @@ src/
   store/                # Zustand window store
 public/                 # brand mark, manifest icons
 ```
+
+## License
+
+MIT — see [LICENSE](LICENSE). Copyright (c) 2026 Carter Tull.

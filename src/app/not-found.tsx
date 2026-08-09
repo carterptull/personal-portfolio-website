@@ -11,7 +11,7 @@ export default function NotFound() {
       <div className="bevel-window w-full max-w-md bg-chrome p-0.5">
         <div className="titlebar-active flex items-center px-2 py-1">
           <span className="font-pixel text-sm font-bold">
-            CarterOS — Illegal Operation
+            CarterOS - Illegal Operation
           </span>
         </div>
         <div className="space-y-4 p-4 text-[15px]">
@@ -19,8 +19,8 @@ export default function NotFound() {
             A fatal exception 404 has occurred at 0xC0DE:0xBB0000.
           </p>
           <p>
-            The page you asked for could not be found. It may have been moved,
-            deleted, or never existed in the first place.
+            The page you asked for could not be found. It was probably moved or
+            deleted.
           </p>
           <ul className="list-disc pl-5 text-sm">
             <li>Press the button below to return to the desktop.</li>

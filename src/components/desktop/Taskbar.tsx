@@ -125,7 +125,7 @@ function StartMenu({
         ))}
         <hr className="my-1 border-t border-chrome-dark" aria-hidden="true" />
         <p className="font-pixel px-2 py-1 text-[10px] text-neutral-600">
-          v{SITE_VERSION} · {COPYRIGHT}
+          v{SITE_VERSION}, {COPYRIGHT}
         </p>
       </div>
     </div>
@@ -142,7 +142,7 @@ export function Taskbar({
   const [menuOpen, setMenuOpen] = useState(false);
   const startRef = useRef<HTMLButtonElement>(null);
   const windows = useWindowStore((s) => s.windows);
-  const order = useWindowStore((s) => s.order);
+  const openOrder = useWindowStore((s) => s.openOrder);
   const focusedId = useWindowStore((s) => s.focusedId);
   const focus = useWindowStore((s) => s.focus);
   const minimize = useWindowStore((s) => s.minimize);
@@ -176,7 +176,7 @@ export function Taskbar({
       </div>
 
       <div className="flex min-w-0 flex-1 gap-1 overflow-x-auto">
-        {order.map((id) => {
+        {openOrder.map((id) => {
           const win = windows[id];
           if (!win) return null;
           const active = focusedId === id && win.state !== "minimized";
@@ -203,7 +203,7 @@ export function Taskbar({
 
       <span
         className="font-pixel hidden px-1.5 text-[10px] text-neutral-600 sm:inline"
-        title={`Created by Carter Tull · ${COPYRIGHT}`}
+        title={`Created by Carter Tull, ${COPYRIGHT}`}
       >
         v{SITE_VERSION}
       </span>

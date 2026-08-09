@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 const BIOS_LINES = [
-  "CTULL BIOS v3.41 — Pixel Systems, Inc.",
+  "CTULL BIOS v3.41 - Pixel Systems, Inc.",
   "Memory Test: 65536 KB ........ OK",
   "Detecting IDE drives ......... OK",
   "Loading CARTER.SYS",
