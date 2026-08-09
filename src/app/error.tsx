@@ -13,7 +13,7 @@ export default function ErrorPage({
       <div className="bevel-window w-full max-w-md bg-chrome p-0.5">
         <div className="titlebar-active flex items-center px-2 py-1">
           <span className="font-pixel text-sm font-bold">
-            CarterOS — Unexpected Error
+            CarterOS - Unexpected Error
           </span>
         </div>
         <div className="space-y-4 p-4 text-[15px]">
