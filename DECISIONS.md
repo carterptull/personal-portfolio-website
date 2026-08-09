@@ -91,6 +91,24 @@ open-in-new-tab/download links (the fallback path for browsers that can't inline
 notably iOS Safari). The PDF is served from `public/`. **Why:** keeps the desktop metaphor;
 the file is still directly linkable at `/Carter-Tull-Resume.pdf`.
 
+## Separate z-order and taskbar-order arrays in the window store
+`windowStore` keeps `order: id[]` (z-index, index = z, reordered on every focus) and a second
+`openOrder: id[]` (append-only, taskbar render order, only changes on open/close). **Why:** a
+single shared array meant `focus()` splicing a window to the end for z-index also reshuffled
+the taskbar buttons on every click — a real Win95 taskbar never reorders tabs by recency.
+**Alternative:** derive taskbar order by sorting on a per-window `openedAt` timestamp —
+equivalent but an extra field and a sort on every render instead of an already-ordered array.
+
+## `.win-anim` animates `scale`, not `transform`
+The window-open keyframe (`opacity` + scale-in) targets the standalone `scale` CSS property.
+**Why:** window position is set via inline `transform: translate3d(x, y, 0)`; a keyframe that
+also animates `transform` replaces its value for the animation's duration, wiping the position
+and snapping the window to the top-left corner of its containing block until the animation
+finished. `scale`/`rotate`/`translate` are independent from `transform` per the CSS Transforms
+Level 2 spec, so they compose without conflict. **Alternative:** encode position as CSS custom
+properties and reference them in the animated `transform` — works, but needs `@property`
+registration for smooth interpolation and is more machinery for the same result.
+
 ## Canonical URL via NEXT_PUBLIC_SITE_URL
 All metadata/sitemap/JSON-LD derive from one env var with a localhost fallback. **Why:** the
 domain isn't purchased yet; nothing hardcodes it.

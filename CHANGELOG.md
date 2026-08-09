@@ -6,14 +6,73 @@ follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.2.0] — 2026-08-09
+
 ### Added
 - Version and copyright display in the taskbar and Start menu
   (`SITE_VERSION`/`COPYRIGHT` in `src/lib/site.ts`, sourced from
-  `package.json`), plus `VERSION.md` and this changelog.
+  `package.json`), plus this changelog.
+- Certifications & training section on the About page listing all 11
+  completed Anthropic Academy courses as a chip list, plus the
+  ConstructConnect AI Enablement Program and Microsoft Python Programming
+  Fundamentals.
+- Three new project write-ups — **Ampline** (color-graded Claude Code
+  statusline, published to npm), **Claude Code Workbench** (open-source
+  agentic developer tooling framework), and **Blitzcast** (NFL/CFB
+  win-probability predictor) — each linking out to its public GitHub repo
+  (and npm for Ampline).
+- `LICENSE` file (MIT).
 
 ### Changed
-- `package.json` version bumped to `0.1.0-beta` ahead of the `1.0.0` tag
-  once a custom domain is live.
+- `package.json` version bumped to `0.1.0-beta` ahead of a `1.0.0` tag,
+  then to `0.2.0` for this release, tagged `v0.2.0` on GitHub.
+- Updated title from Automation Developer to Software Engineer sitewide
+  (profile, page metadata, JSON-LD, manifest, OG images) to match the
+  current resume.
+- Rewrote the About bio and homepage summary to match the current role and
+  read less like a resume; later shortened further to a plainer, more
+  casual two-paragraph bio.
+- Overhauled the Skills page from 4 groups to 7, adding roughly 40 missing
+  entries (Terraform, the GCP service list, FastAPI/Spring Boot/Next.js,
+  PostgreSQL/pgvector, Anthropic Claude/MCP, OAuth 2.0/OIDC, and more).
+- Renamed the Blitzcast project slug from `blitzcast-nfl-predictor` to
+  `blitzcast` and retitled it to cover NFL & CFB, matching the renamed
+  GitHub repo.
+- Removed the Redis and Anthropic Claude API tags from the Universal Web
+  Scraper tech stack (not actually used) and updated its approach bullet
+  to match.
+- Simplified the "Skills - System Properties" window title to "Skills".
+- Removed the redundant intro line from the top of the Projects window.
+- Capitalized "i-Dotter" (previously "i-dotter") throughout — video
+  playlist titles and About page prose.
+- Rewrote sitewide prose to read less AI-generated: dropped em dashes
+  (kept only in project titles, matching LinkedIn), semicolons, and
+  repeated "X rather than Y" / rule-of-three sentence patterns from every
+  project write-up and the About bio.
+- Swapped the served resume PDF (`public/Carter-Tull-Resume.pdf`) for the
+  current version.
+
+### Fixed
+- **Taskbar reordering glitch** — clicking between windows or restoring a
+  minimized one reshuffled the taskbar buttons, because `windowStore`'s
+  single `order` array did double duty as both z-index stacking order and
+  taskbar render order, and `focus()` spliced the active window to the end
+  of it on every click. Split into `order` (z-index, unchanged) and a new
+  append-only `openOrder` (taskbar), so taskbar buttons now stay in
+  first-opened-left to most-recent-right order regardless of focus.
+- **Window-open position glitch** — the `.win-anim` keyframe animated the
+  `transform` property (`scale(0.96) → scale(1)`) on the same element
+  whose position is also set via an inline `transform: translate3d(...)`.
+  Since a CSS animation replaces the animated property's value for its
+  duration, the window's position was wiped for ~120ms, snapping it to the
+  top-left corner of its container before jumping back. Fixed by animating
+  the standalone `scale` property instead, which composes independently of
+  `transform`.
+
+### Removed
+- `VERSION.md` and `.env.local.example` — versioning is now tracked via
+  git tags/GitHub releases per repo convention; the site's one env var is
+  documented directly in the README instead.
 
 ## [0.1.0] — 2026-07-06 to 2026-07-09
 
