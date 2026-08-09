@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <SsrWindow title="Carter Tull — Welcome">
+    <SsrWindow title="Carter Tull - Welcome">
       <div className="space-y-6 text-[15px] leading-relaxed">
         <header>
           <h1 className="font-pixel text-2xl font-bold">{profile.name}</h1>
@@ -20,9 +20,9 @@ export default function HomePage() {
 
         <p>{profile.summary}</p>
         <p>
-          This site is a working Windows 95–style desktop — with JavaScript
-          enabled you get draggable windows, a taskbar, and an idle 3D Pipes
-          screensaver. Everything also reads fine right here as plain pages:{" "}
+          This site is a working Windows 95 style desktop. With JavaScript on
+          you get draggable windows, a taskbar, and an idle 3D Pipes
+          screensaver. It all reads fine right here as plain pages too:{" "}
           <Link href="/about" className="text-scarlet underline underline-offset-2">
             about me
           </Link>

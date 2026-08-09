@@ -20,7 +20,7 @@ const msSans = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: SITE_TITLE, template: "%s — Carter Tull" },
+  title: { default: SITE_TITLE, template: "%s - Carter Tull" },
   description: SITE_DESCRIPTION,
   openGraph: {
     siteName: SITE_NAME,

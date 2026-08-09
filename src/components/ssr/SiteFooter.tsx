@@ -19,7 +19,7 @@ export function SiteFooter() {
       </p>
       <p className="mt-1 text-neutral-700">
         © {new Date().getFullYear()} Carter Tull. Cookieless, anonymous
-        analytics only — no cookies, no tracking.
+        analytics only. No cookies, no tracking.
       </p>
     </footer>
   );

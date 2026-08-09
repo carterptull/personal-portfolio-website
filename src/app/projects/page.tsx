@@ -5,7 +5,7 @@ import { ProjectsIndexContent } from "@/components/content/ProjectsIndexContent"
 export const metadata: Metadata = {
   title: "Projects",
   description:
-    "Selected software projects by Carter Tull: a full interpreter for the Quandary language, a cross-platform mobile capstone for NBBI, and an OSU class-schedule web scraper.",
+    "Software projects by Carter Tull, including Ampline, a color-graded statusline for Claude Code published to npm, Blitzcast, a football win-probability predictor, Claude Code Workbench, an open-source agentic developer tooling framework, and a full interpreter for the Quandary language.",
   alternates: { canonical: "/projects" },
 };
 

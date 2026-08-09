@@ -28,7 +28,7 @@ export default async function ProjectPage({ params }: Props) {
   if (!project) notFound();
 
   return (
-    <SsrWindow title={`${project.title} — Project`}>
+    <SsrWindow title={project.title}>
       <h1 className="sr-only">{project.title}</h1>
       <ProjectContent project={project} />
       <p className="mt-4">

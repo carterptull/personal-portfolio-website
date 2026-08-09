@@ -5,7 +5,7 @@ import { ContactContent } from "@/components/content/ContactContent";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Contact Carter Tull — email, LinkedIn, and GitHub.",
+    "Contact Carter Tull by email, LinkedIn, or GitHub.",
   alternates: { canonical: "/contact" },
 };
 

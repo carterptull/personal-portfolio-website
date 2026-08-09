@@ -22,9 +22,35 @@ export function AboutContent({ onWatch }: { onWatch?: () => void }) {
           Education
         </h3>
         <p>
-          {profile.education.degree} — {profile.education.school},{" "}
+          {profile.education.degree} from {profile.education.school},{" "}
           {profile.education.year}
         </p>
+      </section>
+
+      <section aria-labelledby="training-heading">
+        <h3 id="training-heading" className="font-pixel font-bold">
+          Certifications &amp; training
+        </h3>
+        <ul className="mt-1 space-y-1">
+          {profile.certifications.map((cert) => (
+            <li key={cert.name}>
+              <span className="font-semibold">{cert.name}</span> ({cert.year}).{" "}
+              {cert.detail}
+              {"courses" in cert && cert.courses.length > 0 && (
+                <ul className="mt-1.5 flex flex-wrap gap-1" aria-label={`${cert.name} courses`}>
+                  {cert.courses.map((course) => (
+                    <li
+                      key={course}
+                      className="bevel-thin-up bg-chrome px-1.5 py-0.5 font-pixel text-xs"
+                    >
+                      {course}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section aria-labelledby="beyond-heading" className="space-y-2">
@@ -32,21 +58,21 @@ export function AboutContent({ onWatch }: { onWatch?: () => void }) {
           Beyond the keyboard
         </h3>
         <p>
-          {profile.personality.band.lead} — {profile.personality.band.detail}{" "}
+          {profile.personality.band.lead}. {profile.personality.band.detail}{" "}
           {onWatch ? (
             <button
               type="button"
               onClick={onWatch}
               className="text-scarlet underline underline-offset-2 font-semibold"
             >
-              ▶ watch the i-dots
+              ▶ watch the i-Dots
             </button>
           ) : (
             <a
               href={CHANNEL_URL}
               className="text-scarlet underline underline-offset-2 font-semibold"
             >
-              ▶ watch the i-dots
+              ▶ watch the i-Dots
             </a>
           )}
         </p>
