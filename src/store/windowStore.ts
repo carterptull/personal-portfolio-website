@@ -13,7 +13,10 @@ export type Win = {
 
 type WindowStore = {
   windows: Record<string, Win>;
+  /** Z-order: index = stacking order, back to front. Reshuffles on focus. */
   order: string[];
+  /** Taskbar order: append-only by first-opened, never reordered by focus. */
+  openOrder: string[];
   focusedId: string | null;
   open: (win: Omit<Win, "state">) => void;
   close: (id: string) => void;
@@ -34,24 +37,30 @@ function topVisible(windows: Record<string, Win>, order: string[]): string | nul
 export const useWindowStore = create<WindowStore>((set) => ({
   windows: {},
   order: [],
+  openOrder: [],
   focusedId: null,
 
   open: (win) =>
     set((s) => {
       const existing = s.windows[win.id];
       const order = [...s.order.filter((id) => id !== win.id), win.id];
+      const openOrder = existing
+        ? s.openOrder
+        : [...s.openOrder.filter((id) => id !== win.id), win.id];
       if (existing) {
         const restored: Win =
           existing.state === "minimized" ? { ...existing, state: "normal" } : existing;
         return {
           windows: { ...s.windows, [win.id]: restored },
           order,
+          openOrder,
           focusedId: win.id,
         };
       }
       return {
         windows: { ...s.windows, [win.id]: { ...win, state: "normal" } },
         order,
+        openOrder,
         focusedId: win.id,
       };
     }),
@@ -61,7 +70,8 @@ export const useWindowStore = create<WindowStore>((set) => ({
       const windows = { ...s.windows };
       delete windows[id];
       const order = s.order.filter((x) => x !== id);
-      return { windows, order, focusedId: topVisible(windows, order) };
+      const openOrder = s.openOrder.filter((x) => x !== id);
+      return { windows, order, openOrder, focusedId: topVisible(windows, order) };
     }),
 
   focus: (id) =>
