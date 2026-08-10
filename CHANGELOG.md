@@ -6,6 +6,8 @@ follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.3.0] — 2026-08-10
+
 ### Added
 - CI: a GitHub Actions workflow (`.github/workflows/ci.yml`) running `npm run lint` and
   `npm run build` on every push/PR to `main`.
@@ -17,6 +19,11 @@ follow [SemVer](https://semver.org/).
 - `SECURITY.md` — a baseline placeholder policy (private vulnerability reporting via GitHub
   advisories), since the site hasn't had a full security review yet and isn't deployed
   publicly. Linked from the README.
+- A "3D Pipes" desktop icon (between Skills and Resume) and matching Start Menu row that play
+  the idle-gated 3D Pipes screensaver on demand, bypassing `prefers-reduced-motion` since a
+  deliberate click is explicit opt-in (the idle timer still fully respects it). Screensaver
+  trigger state moved from `ScreensaverGate`'s local closure into a new `useScreensaverStore`
+  so the idle timer and the new manual triggers share one code path.
 
 ### Fixed
 - `.gitignore` had been a generic Python-project template since the very first commit,

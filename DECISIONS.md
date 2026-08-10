@@ -46,6 +46,16 @@ input; skipped for reduced-motion, missing WebGL, or Save-Data; paused when tab 
 `dpr` clamped [1, 1.5]. **Why:** the signature moment costs 0 bytes on the critical path.
 **Alternative:** always-on WebGL wallpaper — permanent perf tax; rejected.
 
+## Screensaver state lives in its own store, not `ScreensaverGate`'s closure
+`useScreensaverStore` (Zustand) owns `active`/`Saver`/`launch()`/`exit()`; `ScreensaverGate`
+only owns the idle-timer `useEffect` and calls into the store. **Why:** a desktop icon and a
+Start Menu row both need to trigger the same screensaver the idle timer does, and the trigger
+logic was previously a closure trapped inside that timer's effect, unreachable from anywhere
+else. **Alternative:** prop-drill a callback down from a common ancestor — there isn't one;
+`ScreensaverGate` and `IconGrid`/`Taskbar` are siblings under `DesktopChrome`, so this would
+mean lifting state into `DesktopChrome` itself and threading props through multiple layers for
+a concern that has nothing to do with window management.
+
 ## CRT effect in CSS/SVG, not WebGL
 Scanlines/vignette via `repeating-linear-gradient` with a taskbar toggle. **Why:** ~0 KB,
 works everywhere, easily disabled. **Alternative:** WebGL post-processing over the DOM —
