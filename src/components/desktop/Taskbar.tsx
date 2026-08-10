@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useWindowStore } from "@/store/windowStore";
 import { CONTACT, COPYRIGHT, SITE_VERSION } from "@/lib/site";
 import { DESKTOP_APP_IDS, getAppDef, openApp } from "./apps";
+import { useScreensaverStore } from "@/store/screensaverStore";
 
 function Clock() {
   // Renders client-side only (inside the mounted desktop), so Date is safe here.
@@ -101,7 +102,11 @@ function StartMenu({
               className="font-pixel flex w-full items-center gap-2 px-2 py-1.5 text-left text-sm hover:bg-scarlet hover:text-white focus-visible:bg-scarlet focus-visible:text-white focus-visible:outline-none"
               onClick={() => {
                 onClose();
-                openApp(appId, startRef.current);
+                if (appId === "screensaver") {
+                  useScreensaverStore.getState().launch();
+                } else {
+                  openApp(appId, startRef.current);
+                }
               }}
             >
               <def.Icon size={20} />

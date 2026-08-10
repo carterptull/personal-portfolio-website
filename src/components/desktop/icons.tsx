@@ -134,6 +134,26 @@ const contactPx: Px[] = [
   [7, 8, 2, 2, C.scarlet],
 ];
 
+// Monitor frame identical to computerPx; screen shows a pipe elbow with a
+// chrome joint accent, echoing the classic Windows "3D Pipes" icon.
+const screensaverPx: Px[] = [
+  [1, 1, 14, 10, C.chrome],
+  [1, 1, 14, 1, C.light],
+  [1, 1, 1, 10, C.light],
+  [14, 2, 1, 9, C.dark],
+  [2, 10, 12, 1, C.dark],
+  [3, 3, 10, 6, C.screen],
+  [4, 4, 4, 1, C.scarlet],
+  [7, 4, 1, 1, C.scarlet],
+  [7, 5, 1, 2, C.scarlet],
+  [7, 7, 1, 1, C.scarlet],
+  [8, 7, 4, 1, C.scarlet],
+  [11, 6, 2, 2, C.chrome],
+  [6, 11, 4, 2, C.chrome],
+  [4, 13, 8, 2, C.chrome],
+  [4, 14, 8, 1, C.dark],
+];
+
 export const IconComputer = (p: { size?: number }) => (
   <PixelIcon px={computerPx} {...p} />
 );
@@ -148,6 +168,9 @@ export const IconMedia = (p: { size?: number }) => (
 );
 export const IconSkills = (p: { size?: number }) => (
   <PixelIcon px={skillsPx} {...p} />
+);
+export const IconScreensaver = (p: { size?: number }) => (
+  <PixelIcon px={screensaverPx} {...p} />
 );
 export const IconContact = (p: { size?: number }) => (
   <PixelIcon px={contactPx} {...p} />

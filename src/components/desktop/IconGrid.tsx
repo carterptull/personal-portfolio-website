@@ -1,6 +1,7 @@
 "use client";
 
 import { DESKTOP_APP_IDS, getAppDef, openApp } from "./apps";
+import { useScreensaverStore } from "@/store/screensaverStore";
 
 // Vertical flex column: a Resume icon can be appended later with no relayout.
 export function IconGrid({ mobile = false }: { mobile?: boolean }) {
@@ -22,7 +23,11 @@ export function IconGrid({ mobile = false }: { mobile?: boolean }) {
             key={appId}
             type="button"
             className="desktop-icon"
-            onClick={(e) => openApp(appId, e.currentTarget)}
+            onClick={(e) =>
+              appId === "screensaver"
+                ? useScreensaverStore.getState().launch()
+                : openApp(appId, e.currentTarget)
+            }
           >
             <def.Icon size={mobile ? 40 : 34} />
             <span className="icon-label">{def.title.split(/\s[-–—]\s/)[0]}</span>

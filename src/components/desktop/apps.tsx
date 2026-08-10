@@ -10,6 +10,7 @@ import {
   IconDocument,
   IconFolder,
   IconMedia,
+  IconScreensaver,
   IconSkills,
   IconWordDoc,
 } from "./icons";
@@ -69,6 +70,7 @@ export const DESKTOP_APP_IDS = [
   "media",
   "projects",
   "skills",
+  "screensaver",
   "resume",
   "contact",
 ] as const;
@@ -105,6 +107,14 @@ const APPS: Record<string, AppDef> = {
     w: 460,
     h: 480,
     render: () => <SkillsContent />,
+  },
+  screensaver: {
+    title: "3D Pipes",
+    Icon: IconScreensaver,
+    w: 0,
+    h: 0,
+    // Never opened as a window — IconGrid/StartMenu call launch() instead.
+    render: () => null,
   },
   resume: {
     title: "Resume",
