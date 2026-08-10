@@ -38,8 +38,9 @@ Two layers, same content:
   content components inside floating windows (full-screen apps with a Back button on mobile).
 
 More detail in [CLAUDE.md](CLAUDE.md) (architecture map),
-[DECISIONS.md](DECISIONS.md) (why each choice was made), and
-[CHANGELOG.md](CHANGELOG.md) (release history).
+[DECISIONS.md](DECISIONS.md) (why each choice was made),
+[CHANGELOG.md](CHANGELOG.md) (release history), and
+[SECURITY.md](SECURITY.md) (how to report a vulnerability).
 
 ## Project structure
 
