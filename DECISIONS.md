@@ -109,6 +109,27 @@ Level 2 spec, so they compose without conflict. **Alternative:** encode position
 properties and reference them in the animated `transform` — works, but needs `@property`
 registration for smooth interpolation and is more machinery for the same result.
 
+## CI: one lint-and-build job, not a matrix
+`.github/workflows/ci.yml` runs `npm run lint` + `npm run build` on a single `ubuntu-latest` /
+Node 24 job. **Why:** this is a single-target Next.js site deployed to one place, not a
+published package other people's tooling needs to run on — there's no cross-OS/cross-Node
+consumer to protect against, unlike `ampline-claude`'s npm-package matrix (3 OS × 3 Node).
+**Alternative:** copy that matrix anyway for consistency across repos — rejected as pure
+overhead; a matrix answers a question this repo doesn't have.
+
+## GitHub Actions pinned to majors on the current Node runtime, not just "latest"
+`actions/checkout`/`actions/setup-node` are bumped only when their pinned major still runs on
+a deprecated Actions Node runtime (confirmed via each action's `action.yml` `runs.using`
+field, not assumed from version numbers), and bumped to the latest major on the current
+runtime rather than the minimum viable one, after checking each action's changelog for
+breaking changes against this repo's actual usage (default `checkout`, explicit
+`cache: npm` on `setup-node`). **Why:** GitHub deprecates old Actions Node runtimes on a
+schedule; a workflow silently keeps working right up until the runtime is removed, then fails
+with no warning tied to anything in this repo's own history. **Alternative:** blanket-upgrade
+every action to its latest release on a schedule (e.g. via Dependabot Actions updates) —
+worth doing too, but doesn't substitute for actually checking `runs.using`, since an action
+can ship patch/minor releases on an old runtime for a long time before its next major moves it.
+
 ## Canonical URL via NEXT_PUBLIC_SITE_URL
 All metadata/sitemap/JSON-LD derive from one env var with a localhost fallback. **Why:** the
 domain isn't purchased yet; nothing hardcodes it.

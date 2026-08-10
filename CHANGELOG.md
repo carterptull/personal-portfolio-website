@@ -6,6 +6,32 @@ follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- CI: a GitHub Actions workflow (`.github/workflows/ci.yml`) running `npm run lint` and
+  `npm run build` on every push/PR to `main`.
+- Branch protection on `main`: the CI check must pass and be up to date, changes must go
+  through a pull request (enforced for admins too), force-pushes and branch deletion are
+  blocked, and merged branches delete themselves automatically.
+- Dependabot vulnerability alerts and automated security update PRs, turned on at the repo
+  level.
+- `SECURITY.md` — a baseline placeholder policy (private vulnerability reporting via GitHub
+  advisories), since the site hasn't had a full security review yet and isn't deployed
+  publicly. Linked from the README.
+
+### Fixed
+- `.gitignore` had been a generic Python-project template since the very first commit,
+  including a bare `lib/` rule that also matched `src/lib/` — so `src/lib/site.ts` and
+  `src/lib/og.tsx` had never actually been committed to this repo, on any branch, in its
+  entire history. Every local build succeeded only because the files existed on disk; a real
+  fresh clone (what CI, and eventually a deploy, actually builds from) was broken the whole
+  time. Replaced the gitignore with one scoped to what this repo actually is, and committed
+  the two files. Caught by the CI workflow above on its very first run.
+
+### Changed
+- CI now runs on Node 24 (current Active LTS, up from 22), and `actions/checkout`/
+  `actions/setup-node` bumped from v4 to v7 — v4 of both ran on the deprecated Node 20
+  Actions runtime.
+
 ## [0.2.0] — 2026-08-09
 
 ### Added

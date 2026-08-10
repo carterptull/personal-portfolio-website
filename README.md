@@ -1,5 +1,7 @@
 # Carter Tull — Portfolio
 
+[![CI](https://github.com/carterptull/personal-portfolio-website/actions/workflows/ci.yml/badge.svg)](https://github.com/carterptull/personal-portfolio-website/actions/workflows/ci.yml)
+
 Personal portfolio built as a retro **Windows 95/98 desktop**: draggable windows, a taskbar
 and Start menu, a boot sequence, a CRT toggle, and an idle-triggered 3D Pipes screensaver —
 on top of a fully server-rendered, crawlable content layer.
