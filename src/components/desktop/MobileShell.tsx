@@ -42,7 +42,7 @@ function FullScreenApp({ id }: { id: string }) {
         </h2>
       </header>
       <div className="win-scroll bevel-field m-0.5 flex-1 overflow-auto bg-white p-3">
-        {def.render()}
+        {def.render?.()}
       </div>
     </section>
   );

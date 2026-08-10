@@ -6,6 +6,25 @@ follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+- A manual screensaver launch under `prefers-reduced-motion` or Save-Data could not be exited:
+  the effect that attached the dismissal listeners also armed the idle timer, and bailed out
+  early for those users — so a deliberate click (which intentionally bypasses those preferences)
+  left a full-screen overlay only a reload could clear. Dismissal now lives in its own effect,
+  gated on the screensaver being active rather than on the user's motion/data preferences. The
+  idle timer itself is still never armed for them.
+- A manual launch no longer dismisses itself on the first stray `pointermove`: the pointer is
+  still resting on the icon that was just clicked, so incidental drift is ignored for 800 ms.
+  Deliberate input (`pointerdown`/`keydown`/`wheel`/`touchstart`) still exits immediately, and
+  idle-triggered launches keep dismissing on any activity with no grace at all.
+- Activity during the three/R3F chunk download now cancels the launch instead of dropping the
+  screensaver onto a desktop the user has gone back to using: `launch()`/`exit()` share a
+  generation token, so an import that resolves after a newer exit or launch can no longer
+  activate. The loaded module is still cached, so a later launch stays instant.
+- `openApp()` honours an `AppDef.launch`, so screen-takeover apps can never be opened as a
+  window. Previously only matching `appId === "screensaver"` checks in `IconGrid` and the Start
+  Menu kept the screensaver from becoming a 0x0 floating window with a blank taskbar button.
+
 ## [0.3.0] — 2026-08-10
 
 ### Added

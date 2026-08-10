@@ -3,6 +3,7 @@
 import type { ComponentType, ReactNode } from "react";
 import dynamic from "next/dynamic";
 import { getProject, projects } from "@/content/projects";
+import { useScreensaverStore } from "@/store/screensaverStore";
 import { useWindowStore } from "@/store/windowStore";
 import {
   IconComputer,
@@ -56,14 +57,17 @@ const ResumeContent = dynamic(
   { loading }
 );
 
+// An app either opens a window (w/h/render) or takes over the screen itself
+// (launch) — never both. openApp() honours `launch` so the distinction can't be
+// forgotten at a call site.
 export type AppDef = {
   title: string;
   Icon: ComponentType<{ size?: number }>;
-  w: number;
-  h: number;
   route?: string;
-  render: () => ReactNode;
-};
+} & (
+  | { launch?: never; w: number; h: number; render: () => ReactNode }
+  | { launch: () => void; w?: never; h?: never; render?: never }
+);
 
 export const DESKTOP_APP_IDS = [
   "about",
@@ -111,10 +115,7 @@ const APPS: Record<string, AppDef> = {
   screensaver: {
     title: "3D Pipes",
     Icon: IconScreensaver,
-    w: 0,
-    h: 0,
-    // Never opened as a window — IconGrid/StartMenu call launch() instead.
-    render: () => null,
+    launch: () => useScreensaverStore.getState().launch({ manual: true }),
   },
   resume: {
     title: "Resume",
@@ -165,6 +166,11 @@ const triggers = new Map<string, HTMLElement>();
 export function openApp(appId: string, trigger?: HTMLElement | null) {
   const def = getAppDef(appId);
   if (!def) return;
+  // Screen-takeover apps never become a window (or a taskbar button).
+  if (def.launch) {
+    def.launch();
+    return;
+  }
   if (trigger) triggers.set(appId, trigger);
 
   const store = useWindowStore.getState();

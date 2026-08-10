@@ -56,6 +56,23 @@ else. **Alternative:** prop-drill a callback down from a common ancestor — the
 mean lifting state into `DesktopChrome` itself and threading props through multiple layers for
 a concern that has nothing to do with window management.
 
+## Screen-takeover apps opt out of windowing through `AppDef.launch`
+`AppDef` is a union: either `w`/`h`/`render` (opens a `FloatingWindow`) or `launch()` (takes over
+the screen). `openApp()` delegates to `launch()` and returns. **Why:** "the screensaver never
+becomes a window" was previously enforced by an `appId === "screensaver"` check duplicated in
+`IconGrid` and the Start Menu — a convention that only held while every future call site
+remembered it; one that didn't would have produced a 0x0 window and a blank taskbar button. The
+union makes the two shapes mutually exclusive at the type level.
+
+## Screensaver dismissal is never gated on reduced-motion or Save-Data
+`ScreensaverGate` splits idle *arming* (skipped for reduced-motion/Save-Data) from *dismissal*
+(attached whenever the screensaver is active or its chunk is loading). **Why:** `launch()`
+deliberately bypasses those preferences for a manual click, so gating the exit listeners on them
+too left reduced-motion users in a full-screen trap that only a reload could clear. A manual
+launch also gets an 800 ms grace in which an incidental `pointermove` is ignored — the hand is
+still on the mouse over the icon — while deliberate input (`pointerdown`/`keydown`/`wheel`/
+`touchstart`) exits instantly, and the idle path keeps its instant-dismiss-on-anything behaviour.
+
 ## CRT effect in CSS/SVG, not WebGL
 Scanlines/vignette via `repeating-linear-gradient` with a taskbar toggle. **Why:** ~0 KB,
 works everywhere, easily disabled. **Alternative:** WebGL post-processing over the DOM —
