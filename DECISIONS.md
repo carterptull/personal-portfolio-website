@@ -106,11 +106,15 @@ deprecated in favor of `THREE.Timer` — every screensaver mount logged a deprec
 internals. Unpin once R3F migrates to Timer. **Alternative:** stay on 0.185 and accept the
 console warning — rejected; a visible warning on a portfolio is a bad look.
 
-## npm override: postcss ≥8.5.10 under next
-Next bundles postcss 8.4.31 (GHSA-qx2v-qp2m-jg93, moderate XSS in stringify output); no fixed
-Next release existed, so a targeted `overrides` entry forces the nested copy to ^8.5.16.
-**Why:** clears `npm audit` without `--force` (which wanted to downgrade to next@9).
-Remove the override once Next ships with patched postcss.
+## npm override: postcss under next
+Next originally bundled postcss 8.4.31 (GHSA-qx2v-qp2m-jg93, moderate XSS in stringify output);
+no fixed Next release existed at the time, so a targeted `overrides` entry forced the nested
+copy to a patched version. Next 16.3.0 now bundles postcss 8.5.23 natively, but the override
+stayed — bumped to `^8.5.26` alongside the direct `postcss` devDependency — to close two more
+postcss CVEs (GHSA-r28c-9q8g-f849, GHSA-fxqj-rqcc-2cmp; both fixed at 8.5.18/8.5.23) that
+surfaced after the original override was written. **Why:** clears `npm audit` without
+`--force`. Re-check whether the override is still load-bearing next time Next is upgraded —
+it may have become redundant now that Next ships a sufficiently patched postcss itself.
 
 ## Resume as a desktop app, not a route
 Word-style desktop icon opens a window with the PDF in an `<object>` viewer plus

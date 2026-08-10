@@ -6,6 +6,17 @@ follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
+### Security
+- Resolved every open Dependabot alert (20 → 0): `next` 16.2.10 → 16.3.0 (7 advisories, including
+  two high-severity SSRF issues and a Turbopack middleware bypass), `postcss` bumped to `8.5.26`
+  directly and via a re-pinned `overrides.next.postcss` (2 advisories the pinned `next` copy would
+  otherwise have kept vulnerable at 8.5.16), `sharp` pulled up transitively with the `next` bump
+  (libvips CVEs), `js-yaml` 4.3.0 → 4.3.1 (quadratic CPU consumption in `!!omap` resolution), and
+  `nanoid` 3.3.15 → 3.3.18 (infinite loop on zero/negative size). Applied by hand on this branch
+  rather than merging Dependabot's PRs #7–#10, which were closed with a comment pointing here.
+  `brace-expansion` (dev-only, via `eslint`/`eslint-config-next`'s dependency tree) also cleared,
+  swept up by `npm audit fix` alongside the rest — not part of any of the four PRs.
+
 ### Fixed
 - A manual screensaver launch under `prefers-reduced-motion` or Save-Data could not be exited:
   the effect that attached the dismissal listeners also armed the idle timer, and bailed out
