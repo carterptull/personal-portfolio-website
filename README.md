@@ -1,5 +1,7 @@
 # Carter Tull — Portfolio
 
+[![CI](https://github.com/carterptull/personal-portfolio-website/actions/workflows/ci.yml/badge.svg)](https://github.com/carterptull/personal-portfolio-website/actions/workflows/ci.yml)
+
 Personal portfolio built as a retro **Windows 95/98 desktop**: draggable windows, a taskbar
 and Start menu, a boot sequence, a CRT toggle, and an idle-triggered 3D Pipes screensaver —
 on top of a fully server-rendered, crawlable content layer.
@@ -38,8 +40,9 @@ Two layers, same content:
   content components inside floating windows (full-screen apps with a Back button on mobile).
 
 More detail in [CLAUDE.md](CLAUDE.md) (architecture map),
-[DECISIONS.md](DECISIONS.md) (why each choice was made), and
-[CHANGELOG.md](CHANGELOG.md) (release history).
+[DECISIONS.md](DECISIONS.md) (why each choice was made),
+[CHANGELOG.md](CHANGELOG.md) (release history), and
+[SECURITY.md](SECURITY.md) (how to report a vulnerability).
 
 ## Project structure
 
