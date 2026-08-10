@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState, type ComponentType } from "react";
+import { useEffect } from "react";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { useScreensaverStore } from "@/store/screensaverStore";
 
 const IDLE_MS = 60_000;
 const ACTIVITY_EVENTS = [
@@ -13,78 +14,72 @@ const ACTIVITY_EVENTS = [
   "scroll",
 ] as const;
 
-let webglSupport: boolean | null = null;
-function webglOk(): boolean {
-  if (webglSupport !== null) return webglSupport;
-  try {
-    const canvas = document.createElement("canvas");
-    webglSupport = Boolean(
-      canvas.getContext("webgl2") ?? canvas.getContext("webgl")
-    );
-  } catch {
-    webglSupport = false;
-  }
-  return webglSupport;
-}
-
 function saveDataOn(): boolean {
   const nav = navigator as Navigator & { connection?: { saveData?: boolean } };
   return nav.connection?.saveData === true;
 }
 
-type SaverProps = { onExit: () => void };
-
 export function ScreensaverGate() {
   const reducedMotion = usePrefersReducedMotion();
-  const [active, setActive] = useState(false);
-  const [Saver, setSaver] = useState<ComponentType<SaverProps> | null>(null);
+  const active = useScreensaverStore((s) => s.active);
+  const pending = useScreensaverStore((s) => s.pending);
+  const pointerGraceUntil = useScreensaverStore((s) => s.pointerGraceUntil);
+  const Saver = useScreensaverStore((s) => s.Saver);
+  const launch = useScreensaverStore((s) => s.launch);
+  const exit = useScreensaverStore((s) => s.exit);
 
+  // Idle arming only — never armed for reduced-motion/Save-Data users.
   useEffect(() => {
     if (reducedMotion || saveDataOn()) return;
 
     let timer: ReturnType<typeof setTimeout> | undefined;
-    let cancelled = false;
-
-    const fire = () => {
-      if (document.visibilityState !== "visible" || !webglOk()) return;
-      // The three.js chunk is not even requested until this first idle fire;
-      // subsequent fires reuse the module cache.
-      import("./PipesScreensaver").then((m) => {
-        if (cancelled) return;
-        setSaver(() => m.default);
-        setActive(true);
-      });
-    };
 
     const arm = () => {
       clearTimeout(timer);
-      timer = setTimeout(fire, IDLE_MS);
-    };
-
-    const onActivity = () => {
-      setActive(false);
-      arm();
-    };
-
-    const onVisibility = () => {
-      if (document.visibilityState === "hidden") setActive(false);
-      arm();
+      timer = setTimeout(() => launch(), IDLE_MS);
     };
 
     ACTIVITY_EVENTS.forEach((ev) =>
-      window.addEventListener(ev, onActivity, { passive: true })
+      window.addEventListener(ev, arm, { passive: true })
     );
-    document.addEventListener("visibilitychange", onVisibility);
+    document.addEventListener("visibilitychange", arm);
     arm();
 
     return () => {
-      cancelled = true;
       clearTimeout(timer);
-      ACTIVITY_EVENTS.forEach((ev) => window.removeEventListener(ev, onActivity));
+      ACTIVITY_EVENTS.forEach((ev) => window.removeEventListener(ev, arm));
+      document.removeEventListener("visibilitychange", arm);
+    };
+  }, [reducedMotion, launch]);
+
+  // Dismissal, deliberately *not* gated on reduced-motion/Save-Data: launch()
+  // bypasses those preferences for a manual trigger, so a user who never gets
+  // the idle timer armed would otherwise be trapped with no way out. Runs while
+  // the chunk is still loading too, so activity cancels a launch mid-download.
+  useEffect(() => {
+    if (!active && !pending) return;
+
+    const dismiss = (e: Event) => {
+      if (e.type === "pointermove" && Date.now() < pointerGraceUntil) return;
+      exit();
+    };
+
+    const onVisibility = () => {
+      if (document.visibilityState === "hidden") exit();
+    };
+
+    ACTIVITY_EVENTS.forEach((ev) =>
+      window.addEventListener(ev, dismiss, { passive: true })
+    );
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return () => {
+      ACTIVITY_EVENTS.forEach((ev) => window.removeEventListener(ev, dismiss));
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [reducedMotion]);
+  }, [active, pending, pointerGraceUntil, exit]);
 
   if (!active || !Saver) return null;
-  return <Saver onExit={() => setActive(false)} />;
+  // eslint-disable-next-line react-hooks/static-components
+  return <Saver onExit={exit} />;
 }

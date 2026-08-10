@@ -46,6 +46,33 @@ input; skipped for reduced-motion, missing WebGL, or Save-Data; paused when tab 
 `dpr` clamped [1, 1.5]. **Why:** the signature moment costs 0 bytes on the critical path.
 **Alternative:** always-on WebGL wallpaper — permanent perf tax; rejected.
 
+## Screensaver state lives in its own store, not `ScreensaverGate`'s closure
+`useScreensaverStore` (Zustand) owns `active`/`Saver`/`launch()`/`exit()`; `ScreensaverGate`
+only owns the idle-timer `useEffect` and calls into the store. **Why:** a desktop icon and a
+Start Menu row both need to trigger the same screensaver the idle timer does, and the trigger
+logic was previously a closure trapped inside that timer's effect, unreachable from anywhere
+else. **Alternative:** prop-drill a callback down from a common ancestor — there isn't one;
+`ScreensaverGate` and `IconGrid`/`Taskbar` are siblings under `DesktopChrome`, so this would
+mean lifting state into `DesktopChrome` itself and threading props through multiple layers for
+a concern that has nothing to do with window management.
+
+## Screen-takeover apps opt out of windowing through `AppDef.launch`
+`AppDef` is a union: either `w`/`h`/`render` (opens a `FloatingWindow`) or `launch()` (takes over
+the screen). `openApp()` delegates to `launch()` and returns. **Why:** "the screensaver never
+becomes a window" was previously enforced by an `appId === "screensaver"` check duplicated in
+`IconGrid` and the Start Menu — a convention that only held while every future call site
+remembered it; one that didn't would have produced a 0x0 window and a blank taskbar button. The
+union makes the two shapes mutually exclusive at the type level.
+
+## Screensaver dismissal is never gated on reduced-motion or Save-Data
+`ScreensaverGate` splits idle *arming* (skipped for reduced-motion/Save-Data) from *dismissal*
+(attached whenever the screensaver is active or its chunk is loading). **Why:** `launch()`
+deliberately bypasses those preferences for a manual click, so gating the exit listeners on them
+too left reduced-motion users in a full-screen trap that only a reload could clear. A manual
+launch also gets an 800 ms grace in which an incidental `pointermove` is ignored — the hand is
+still on the mouse over the icon — while deliberate input (`pointerdown`/`keydown`/`wheel`/
+`touchstart`) exits instantly, and the idle path keeps its instant-dismiss-on-anything behaviour.
+
 ## CRT effect in CSS/SVG, not WebGL
 Scanlines/vignette via `repeating-linear-gradient` with a taskbar toggle. **Why:** ~0 KB,
 works everywhere, easily disabled. **Alternative:** WebGL post-processing over the DOM —
@@ -79,11 +106,15 @@ deprecated in favor of `THREE.Timer` — every screensaver mount logged a deprec
 internals. Unpin once R3F migrates to Timer. **Alternative:** stay on 0.185 and accept the
 console warning — rejected; a visible warning on a portfolio is a bad look.
 
-## npm override: postcss ≥8.5.10 under next
-Next bundles postcss 8.4.31 (GHSA-qx2v-qp2m-jg93, moderate XSS in stringify output); no fixed
-Next release existed, so a targeted `overrides` entry forces the nested copy to ^8.5.16.
-**Why:** clears `npm audit` without `--force` (which wanted to downgrade to next@9).
-Remove the override once Next ships with patched postcss.
+## npm override: postcss under next
+Next originally bundled postcss 8.4.31 (GHSA-qx2v-qp2m-jg93, moderate XSS in stringify output);
+no fixed Next release existed at the time, so a targeted `overrides` entry forced the nested
+copy to a patched version. Next 16.3.0 now bundles postcss 8.5.23 natively, but the override
+stayed — bumped to `^8.5.26` alongside the direct `postcss` devDependency — to close two more
+postcss CVEs (GHSA-r28c-9q8g-f849, GHSA-fxqj-rqcc-2cmp; both fixed at 8.5.18/8.5.23) that
+surfaced after the original override was written. **Why:** clears `npm audit` without
+`--force`. Re-check whether the override is still load-bearing next time Next is upgraded —
+it may have become redundant now that Next ships a sufficiently patched postcss itself.
 
 ## Resume as a desktop app, not a route
 Word-style desktop icon opens a window with the PDF in an `<object>` viewer plus

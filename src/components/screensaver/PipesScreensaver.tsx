@@ -148,7 +148,9 @@ function PipesScene() {
   return <group ref={group} />;
 }
 
-export default function PipesScreensaver({ onExit }: { onExit: () => void }) {
+export type SaverProps = { onExit: () => void };
+
+export default function PipesScreensaver({ onExit }: SaverProps) {
   return (
     <div
       className="fixed inset-0 z-[9800] bg-void"

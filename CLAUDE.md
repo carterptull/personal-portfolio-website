@@ -39,9 +39,12 @@ Key modules:
   store only on pointerup. Never commit per-move.
 - `src/components/desktop/MobileShell.tsx` + `src/hooks/useIsMobile.ts` — <768px renders
   full-screen apps (Back control, bottom bar) instead of floating windows.
-- `src/components/screensaver/ScreensaverGate.tsx` — 3D Pipes mounts only after ~60s idle
-  via dynamic import; disposes on input; skipped for reduced-motion / no WebGL / Save-Data.
-  `three` must stay in its own async chunk — never import it from eagerly-loaded modules.
+- `src/store/screensaverStore.ts` + `src/components/screensaver/ScreensaverGate.tsx` — 3D Pipes
+  mounts after ~60s idle (or on demand via the "3D Pipes" icon/Start Menu row, which is an
+  `AppDef.launch` that `openApp` delegates to) via dynamic import; disposes on input. Idle
+  *arming* is skipped for reduced-motion / no WebGL / Save-Data; *dismissal* never is, since a
+  manual launch deliberately bypasses those preferences. `three` must stay in its own async
+  chunk — never import it from eagerly-loaded modules.
 - `src/content/*.ts` — all copy/data (profile, projects, skills, videos). Edit content here,
   not in components.
 - `src/lib/site.ts` — site URL/name/contact constants.
@@ -64,3 +67,13 @@ Key modules:
 
 Add an entry to `src/content/projects.ts` — routes, sitemap, OG image, desktop icon, and
 window all derive from it. No layout changes needed.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
