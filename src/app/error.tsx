@@ -9,7 +9,7 @@ export default function ErrorPage({
   reset: () => void;
 }) {
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-void p-4">
+    <div className="ssr-escape fixed inset-0 z-[9999] flex items-center justify-center bg-void p-4">
       <div className="bevel-window w-full max-w-md bg-chrome p-0.5">
         <div className="titlebar-active flex items-center px-2 py-1">
           <span className="font-pixel text-sm font-bold">
