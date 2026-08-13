@@ -169,6 +169,7 @@ export function FloatingWindow({
         onPointerDown={onTitleDown}
         onPointerMove={onTitleMove}
         onPointerUp={onTitleUp}
+        onLostPointerCapture={onTitleUp} // also covers a cancelled pointer
         onDoubleClick={() => toggleMax(win.id)}
       >
         {Icon ? <Icon size={16} /> : null}
@@ -225,6 +226,7 @@ export function FloatingWindow({
             onPointerDown={(e) => onHandleDown(e, dir)}
             onPointerMove={onHandleMove}
             onPointerUp={onHandleUp}
+            onLostPointerCapture={onHandleUp}
           />
         ))}
     </section>
