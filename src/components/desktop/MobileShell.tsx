@@ -20,6 +20,7 @@ function FullScreenApp({ id }: { id: string }) {
     <section
       ref={ref}
       role="dialog"
+      aria-modal="true"
       aria-labelledby={`app-title-${id}`}
       tabIndex={-1}
       className="bevel-window absolute inset-x-0 top-0 bottom-12 z-40 flex flex-col bg-chrome p-0.5 focus:outline-none"
@@ -65,9 +66,12 @@ export function MobileShell() {
       : [...order].reverse().find((id) => windows[id]?.state !== "minimized") ?? null;
 
   return (
-    <div className="absolute inset-0">
+    <div id="desktop-main" tabIndex={-1} className="absolute inset-0 focus:outline-none">
       <h1 className="sr-only">Carter Tull desktop</h1>
-      <IconGrid mobile />
+      {/* inert: a full-screen app is modal here, so keep Tab out of the icons behind it */}
+      <div inert={activeId ? true : undefined}>
+        <IconGrid mobile />
+      </div>
       {activeId && <FullScreenApp id={activeId} />}
       <div
         role="toolbar"
