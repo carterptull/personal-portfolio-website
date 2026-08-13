@@ -2,6 +2,8 @@
 
 [![CI](https://github.com/carterptull/personal-portfolio-website/actions/workflows/ci.yml/badge.svg)](https://github.com/carterptull/personal-portfolio-website/actions/workflows/ci.yml)
 
+**[cartertull.com](https://cartertull.com)**
+
 Personal portfolio built as a retro **Windows 95/98 desktop**: draggable windows, a taskbar
 and Start menu, a boot sequence, a CRT toggle, and an idle-triggered 3D Pipes screensaver —
 on top of a fully server-rendered, crawlable content layer.
@@ -27,8 +29,18 @@ npm run build
 npm run start
 ```
 
-Optional: set `NEXT_PUBLIC_SITE_URL` in a local `.env.local` file (defaults to
-`http://localhost:3000`; set to the real domain when deploying).
+### Configuration
+
+`NEXT_PUBLIC_SITE_URL` is the one environment variable, and it sets the origin used by every
+canonical tag, OG image URL, `sitemap.xml` entry, and the JSON-LD `Person`. Resolution order:
+
+1. `NEXT_PUBLIC_SITE_URL`, if set — put it in `.env.local` for local overrides, or in the
+   hosting provider's environment settings for a deploy.
+2. Vercel's system variables (production domain on production, per-deploy URL on previews), so
+   preview deployments self-canonicalize rather than claiming to be production.
+3. `http://localhost:3000`, so a fresh clone builds and runs with no setup.
+
+Nothing else is configurable and there are no secrets — see [SECURITY.md](SECURITY.md).
 
 ## How it's put together
 

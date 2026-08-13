@@ -47,15 +47,23 @@ Key modules:
   chunk — never import it from eagerly-loaded modules.
 - `src/content/*.ts` — all copy/data (profile, projects, skills, videos). Edit content here,
   not in components.
-- `src/lib/site.ts` — site URL/name/contact constants.
+- `src/lib/site.ts` — site URL/name/contact constants. `SITE_URL` resolves
+  `NEXT_PUBLIC_SITE_URL` → Vercel system vars → `localhost:3000`, in that order.
+- `next.config.ts` — security response headers (CSP, framing, HSTS, etc.) for every route.
+  The CSP is derived from what this app actually does; three allowances are load-bearing and
+  each has a comment saying why: `frame-src 'self'` and `object-src 'self'` (Chrome renders the
+  resume PDF `<object>` through an internal viewer frame), and `frame-ancestors 'self'` rather
+  than `'none'` (the same headers ride on the PDF asset). Verify any CSP edit against a
+  production build in a real browser — `npm run build && npx next start` — not by reading it.
 
 ## Hard constraints (acceptance criteria, not suggestions)
 
 - Name is **Carter Tull** everywhere. Zero mention of "Paymon" in site, code, or assets.
 - **No job-search signaling** ("open to work", "available for hire", etc.); JSON-LD Person
   has no `seeks`/availability fields.
-- One scarlet: **#BB0000** (`#E23A3A` allowed only as the title-bar gradient end).
-  Never `#d0201f`.
+- One scarlet: **#BB0000**. `#E23A3A` is allowed only as a *gradient end* — currently the
+  title bar, the boot progress bar, and the Start menu sidebar. Never a flat fill, and
+  never `#d0201f`.
 - Content must render in server HTML; never fetch/inject page content client-side only.
 - Every desktop interaction needs a keyboard + touch path; respect `prefers-reduced-motion`
   (skip boot, screensaver, animations).

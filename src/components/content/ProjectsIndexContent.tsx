@@ -16,7 +16,7 @@ export function ProjectsIndexContent({
         {projects.map((p) => (
           <li key={p.slug}>
             <article className="bevel-thin-down bg-white p-3">
-              <h3 className="font-pixel text-lg font-bold">
+              <h2 className="font-pixel text-lg font-bold">
                 <Link
                   href={`/projects/${p.slug}`}
                   className="text-scarlet underline underline-offset-2"
@@ -31,7 +31,7 @@ export function ProjectsIndexContent({
                 >
                   {p.title}
                 </Link>
-              </h3>
+              </h2>
               <p className="mt-1 text-[15px] leading-relaxed">{p.summary}</p>
               <p className="mt-2 flex flex-wrap gap-1" aria-label="Tech stack">
                 {p.stack.map((s) => (

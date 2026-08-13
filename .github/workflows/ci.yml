@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+# `npm ci` runs dependency lifecycle scripts; nothing here needs to write.
+permissions:
+  contents: read
+
 jobs:
   lint-and-build:
     name: Lint & Build

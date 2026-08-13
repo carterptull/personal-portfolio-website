@@ -1,9 +1,15 @@
-import { getProject } from "@/content/projects";
+import { notFound } from "next/navigation";
+import { getProject, projects } from "@/content/projects";
 import { ogWindow, OG_SIZE } from "@/lib/og";
 
 export const alt = "Project - Carter Tull";
 export const size = OG_SIZE;
 export const contentType = "image/png";
+
+// Prerenders all 9 cards at build time instead of rasterizing on every crawler fetch.
+export function generateStaticParams() {
+  return projects.map((p) => ({ slug: p.slug }));
+}
 
 export default async function OpengraphImage({
   params,
@@ -12,9 +18,6 @@ export default async function OpengraphImage({
 }) {
   const { slug } = await params;
   const project = getProject(slug);
-  return ogWindow(
-    `${slug}.exe`,
-    project?.title ?? "Project",
-    project ? project.stack.join(", ") : "Carter Tull"
-  );
+  if (!project) notFound(); // match the page route's guard
+  return ogWindow(`${slug}.exe`, project.title, project.stack.join(", "));
 }

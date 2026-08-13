@@ -37,6 +37,15 @@ export const viewport: Viewport = {
   ],
 };
 
+// Escapes what JSON.stringify leaves intact, so a "</script>" value couldn't
+// break out of this block.
+function jsonLdHtml(data: unknown): string {
+  return JSON.stringify(data)
+    .replace(/</g, "\\u003c")
+    .replace(/\u2028/g, "\\u2028")
+    .replace(/\u2029/g, "\\u2029");
+}
+
 const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
@@ -66,7 +75,7 @@ export default function RootLayout({
         <DesktopBoundary />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: jsonLdHtml(personJsonLd) }}
         />
         {process.env.VERCEL ? (
           <>

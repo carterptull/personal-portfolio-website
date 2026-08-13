@@ -1,0 +1,21 @@
+version: 2
+updates:
+  # Routine version updates, on top of the repo-level security alerts already enabled.
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # Grouped by cluster, not per-package — these deps move together.
+      react-next:
+        patterns: ["next", "react", "react-dom", "@types/react", "@types/react-dom", "eslint-config-next"]
+      three:
+        patterns: ["three", "@types/three", "@react-three/*"]
+      dev-tooling:
+        dependency-type: development
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly

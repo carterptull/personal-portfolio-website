@@ -162,5 +162,34 @@ worth doing too, but doesn't substitute for actually checking `runs.using`, sinc
 can ship patch/minor releases on an old runtime for a long time before its next major moves it.
 
 ## Canonical URL via NEXT_PUBLIC_SITE_URL
-All metadata/sitemap/JSON-LD derive from one env var with a localhost fallback. **Why:** the
-domain isn't purchased yet; nothing hardcodes it.
+All metadata/sitemap/JSON-LD derive from one env var with a localhost fallback. **Why:**
+originally because the domain wasn't purchased yet; kept after `cartertull.com` was acquired
+(2026-08-13) because the fallback is what makes a fresh clone build and run with no setup, and
+because preview deployments need a different origin than production — a hardcoded domain would
+make every Vercel preview emit canonical/OG URLs pointing at production. **Alternative:**
+hardcode `https://cartertull.com` now that it exists — rejected; it trades zero-config local
+dev and correct preview metadata for saving one environment variable.
+
+## CSP keeps `'unsafe-inline'` on `script-src` instead of adopting nonces
+`next.config.ts` ships a Content-Security-Policy whose `script-src` allows `'unsafe-inline'`.
+**Why:** all 31 routes prerender to static HTML, and nonces must be unique per response — so a
+nonce-based policy requires `middleware.ts` and forces every route to render dynamically,
+trading the site's entire static-delivery story (and the LCP ≤2.0s budget) for XSS defense on a
+site with no user input, no auth, no cookies, and no database. The only inline scripts are
+Next's own RSC flight payload and a JSON-LD block built from compile-time constants. The
+realistic threat to an interactive fake desktop is clickjacking, not injection, and
+`frame-ancestors` answers that. **Alternative:** nonce + `strict-dynamic` — correct for an app
+with real user input; revisit the moment this site gains a form or a dynamic route.
+**Consequence:** `'unsafe-eval'` is added in development only, because React's dev build uses
+`eval()` for callstack reconstruction and its production build never does.
+
+## Framing headers are `'self'`/`SAMEORIGIN`, not `'none'`/`DENY`
+**Why:** the header block applies to `/:path*`, which includes `/Carter-Tull-Resume.pdf`. Chrome
+renders a PDF `<object>` through an internal viewer frame, so `'none'`/`DENY` left the resume
+window unable to frame its own PDF — and `frame-src` had to allow `'self'` for the same reason,
+not just `object-src`. `'self'` still refuses cross-origin framing, which is the only thing
+clickjacking needs. **Alternative:** keep `'none'` globally and carve out the PDF path with a
+second `headers()` entry — more moving parts for no additional protection, since a same-origin
+frame of your own page is not a clickjacking vector. **How this was found:** not by reading the
+spec — by loading a production build in a real browser and watching the resume window come up
+blank. Both CSP bugs looked correct on paper.
