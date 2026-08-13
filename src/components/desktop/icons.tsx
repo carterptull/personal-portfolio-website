@@ -134,8 +134,8 @@ const contactPx: Px[] = [
   [7, 8, 2, 2, C.scarlet],
 ];
 
-// Monitor frame identical to computerPx; screen shows a pipe elbow with a
-// chrome joint accent, echoing the classic Windows "3D Pipes" icon.
+// Monitor frame identical to computerPx; screen shows a bare pipe elbow,
+// echoing the classic Windows "3D Pipes" icon.
 const screensaverPx: Px[] = [
   [1, 1, 14, 10, C.chrome],
   [1, 1, 14, 1, C.light],
@@ -148,7 +148,6 @@ const screensaverPx: Px[] = [
   [7, 5, 1, 2, C.scarlet],
   [7, 7, 1, 1, C.scarlet],
   [8, 7, 4, 1, C.scarlet],
-  [11, 6, 2, 2, C.chrome],
   [6, 11, 4, 2, C.chrome],
   [4, 13, 8, 2, C.chrome],
   [4, 14, 8, 1, C.dark],
