@@ -231,8 +231,20 @@ body {
 
 /* ---------- SSR (no-JS) document layer ---------- */
 
-body.desktop-active .ssr-layer,
+body.desktop-active .ssr-layer:not(:has(.ssr-escape)),
 body.desktop-active > a.skip-link {
+  display: none;
+}
+
+/* .ssr-escape (error.tsx, not-found.tsx) opts out of the display:none above —
+   otherwise a render error would hide its own "Try again" button. */
+body.desktop-active .ssr-layer:has(.ssr-escape) {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+body.desktop-active .ssr-layer:has(.ssr-escape) > :not(main) {
   display: none;
 }
 
