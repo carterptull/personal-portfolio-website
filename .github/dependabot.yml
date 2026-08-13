@@ -1,0 +1,23 @@
+version: 2
+updates:
+  # Repo-level Dependabot security updates already open PRs for advisories; these
+  # entries add routine version updates so the tree doesn't drift between alerts.
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # One PR per ecosystem cluster instead of a PR per package — this repo's
+      # deps move together (React/Next, the three.js stack, Tailwind/PostCSS).
+      react-next:
+        patterns: ["next", "react", "react-dom", "@types/react", "@types/react-dom", "eslint-config-next"]
+      three:
+        patterns: ["three", "@types/three", "@react-three/*"]
+      dev-tooling:
+        dependency-type: development
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
