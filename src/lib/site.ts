@@ -1,8 +1,19 @@
 import pkg from "../../package.json";
 
-export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
-).replace(/\/+$/, "");
+// Falls back to Vercel's system vars so a forgotten NEXT_PUBLIC_SITE_URL can't ship
+// localhost canonical URLs, and previews self-canonicalize instead of claiming prod.
+function resolveSiteUrl(): string {
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL;
+  if (explicit) return explicit;
+  const vercelHost =
+    process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
+      ? process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL
+      : process.env.NEXT_PUBLIC_VERCEL_URL;
+  if (vercelHost) return `https://${vercelHost}`;
+  return "http://localhost:3000";
+}
+
+export const SITE_URL = resolveSiteUrl().replace(/\/+$/, "");
 
 export const SITE_VERSION = pkg.version;
 export const COPYRIGHT = `© ${new Date().getFullYear()} Carter Tull`;
