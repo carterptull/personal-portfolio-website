@@ -196,9 +196,15 @@ export function openApp(appId: string, trigger?: HTMLElement | null) {
 export function closeApp(appId: string) {
   useWindowStore.getState().close(appId);
   const trigger = triggers.get(appId);
-  if (trigger?.isConnected) {
-    requestAnimationFrame(() => trigger.focus());
-  }
+  requestAnimationFrame(() => {
+    // Re-check here: closing a taskbar-triggered window unmounts the trigger, but
+    // React hasn't committed that yet at call time.
+    if (trigger?.isConnected) {
+      trigger.focus();
+      return;
+    }
+    document.getElementById("desktop-main")?.focus();
+  });
 }
 
 export { projects };
