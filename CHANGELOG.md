@@ -6,18 +6,64 @@ follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
-### Security
-- Resolved every open Dependabot alert (20 → 0): `next` 16.2.10 → 16.3.0 (7 advisories, including
-  two high-severity SSRF issues and a Turbopack middleware bypass), `postcss` bumped to `8.5.26`
-  directly and via a re-pinned `overrides.next.postcss` (2 advisories the pinned `next` copy would
-  otherwise have kept vulnerable at 8.5.16), `sharp` pulled up transitively with the `next` bump
-  (libvips CVEs), `js-yaml` 4.3.0 → 4.3.1 (quadratic CPU consumption in `!!omap` resolution), and
-  `nanoid` 3.3.15 → 3.3.18 (infinite loop on zero/negative size). Applied by hand on this branch
-  rather than merging Dependabot's PRs #7–#10, which were closed with a comment pointing here.
-  `brace-expansion` (dev-only, via `eslint`/`eslint-config-next`'s dependency tree) also cleared,
-  swept up by `npm audit fix` alongside the rest — not part of any of the four PRs.
+## [1.0.0] — 2026-08-13
+
+First public release, on the `cartertull.com` domain. The version reflects a site that is
+deployed and reviewed rather than any rewrite — the architecture is unchanged from 0.3.0.
+
+### Added
+- Security response headers on every route (`next.config.ts`): a Content-Security-Policy,
+  `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, and
+  HSTS with `preload`. The CSP was derived from what this app actually does and verified
+  against a production build in a real browser, which caught two policies that looked correct
+  on paper and broke the site in practice:
+  - Chrome renders a PDF `<object>` through its internal viewer **frame**, so the resume window
+    needs `frame-src 'self'` in addition to `object-src 'self'`.
+  - The same headers ride on `/Carter-Tull-Resume.pdf` itself, so `frame-ancestors 'none'` left
+    the resume window unable to frame its own PDF. Scoped to `'self'` (with `X-Frame-Options:
+    SAMEORIGIN` to match), which still refuses the cross-origin framing that clickjacking needs.
+  `script-src` keeps `'unsafe-inline'` — see `DECISIONS.md` for why a nonce is the wrong trade
+  here — and `'unsafe-eval'` is added in development only, since React's dev build needs it and
+  its production build never does.
+- `poweredByHeader: false`, dropping the `X-Powered-By: Next.js` version disclosure.
+- `.github/dependabot.yml`: weekly grouped npm and github-actions version updates, on top of the
+  repo-level security alerts that were already enabled.
+- `generateStaticParams` on the per-project OG image route, so all nine cards are rasterized at
+  build time instead of on every social-crawler fetch.
+- `NEXT_PUBLIC_SITE_URL` now falls back to Vercel's system environment variables before
+  `localhost` (`src/lib/site.ts`), so a forgotten variable can't ship localhost canonicals and
+  preview deploys self-canonicalize instead of claiming to be production.
 
 ### Fixed
+- The 404 and error documents were rendered `display: none` and were unreachable whenever
+  JavaScript was enabled. Both live inside `.ssr-layer`, which the desktop hides on mount
+  (`globals.css`), so a render error hid its own "Try again" button and a bad URL showed a
+  normal desktop. They now opt out via an `.ssr-escape` class, and the URL-sync effect in
+  `DesktopChrome` no longer rewrites an unrecognised path to `/` — a broken link stays visible
+  in the address bar instead of being silently swallowed.
+- A cancelled pointer (interrupting system gesture, pen leaving range) left a window stuck in
+  drag/resize: the state ref was cleared only on `pointerup`, so the next `pointermove` moved
+  the window with no button held. `onLostPointerCapture` now covers both paths.
+- `sessionStorage`/`localStorage` access in `DesktopChrome` was unguarded. These throw in Safari
+  private mode, with site data blocked, and in partitioned third-party frames — and an exception
+  in a `useState` initializer took the entire desktop layer down with it. Now guarded, with the
+  preference simply not persisting.
+- Closing a window that had been restored from its taskbar button dropped focus to `<body>`:
+  closing unmounts that button, and the `isConnected` check ran before React committed. The
+  check now happens inside the animation frame, falling back to the desktop container.
+- The skip link pointed at `#desktop-main`, which only existed in the desktop branch — it was a
+  dead anchor for every mobile visitor. `MobileShell`'s root now carries that id.
+- A full-screen mobile app is genuinely modal, but the icon grid behind it stayed focusable, so
+  Tab walked straight out of the dialog into invisible controls. The grid is now `inert` while an
+  app is open, and the dialog declares `aria-modal`.
+- Project titles on the projects index were `<h3>` directly under an `<h1>`, skipping a level in
+  both the page and the desktop window. Now `<h2>`.
+- The per-project OG image route rendered a PNG for any slug, falling back to "Project" instead
+  of 404ing — an unbounded set of uncached Satori renders, each embedding attacker-chosen text on
+  this domain. It now mirrors the page route's `notFound()` guard.
+- JSON-LD is escaped for `<` and U+2028/2029 before being written into the `<script>` block. Not
+  exploitable today (every value is a compile-time constant), but it stops that from being
+  load-bearing.
 - A manual screensaver launch under `prefers-reduced-motion` or Save-Data could not be exited:
   the effect that attached the dismissal listeners also armed the idle timer, and bailed out
   early for those users — so a deliberate click (which intentionally bypasses those preferences)
@@ -35,6 +81,38 @@ follow [SemVer](https://semver.org/).
 - `openApp()` honours an `AppDef.launch`, so screen-takeover apps can never be opened as a
   window. Previously only matching `appId === "screensaver"` checks in `IconGrid` and the Start
   Menu kept the screensaver from becoming a 0x0 floating window with a blank taskbar button.
+
+### Changed
+- The 3D Pipes desktop icon drops the chrome joint that was painted over the end of the pipe;
+  the monitor now shows a bare scarlet elbow.
+- `SECURITY.md` replaced its placeholder text — which said the site had no production domain and
+  no review — with a real policy: supported versions, scope, response expectations, and the
+  CSP trade-off stated explicitly rather than left to be discovered.
+- CI runs with an explicit read-only `GITHUB_TOKEN` (`permissions: contents: read`).
+- The `#E23A3A` rule in `CLAUDE.md` now reads "gradient end" rather than "title-bar gradient
+  end", matching where it is actually used (title bar, boot progress bar, Start menu sidebar).
+  The code was consistent; the rule was narrower than the design.
+
+### Removed
+- `Carter_Tull_Resume.pdf` at the repo root — a byte-identical duplicate of
+  `public/Carter-Tull-Resume.pdf`, which is the only copy ever served. Nothing referenced the
+  root filename.
+
+### Security
+- Resolved every open Dependabot alert (20 → 0): `next` 16.2.10 → 16.3.0 (7 advisories, including
+  two high-severity SSRF issues and a Turbopack middleware bypass), `postcss` bumped to `8.5.26`
+  directly and via a re-pinned `overrides.next.postcss` (2 advisories the pinned `next` copy would
+  otherwise have kept vulnerable at 8.5.16), `sharp` pulled up transitively with the `next` bump
+  (libvips CVEs), `js-yaml` 4.3.0 → 4.3.1 (quadratic CPU consumption in `!!omap` resolution), and
+  `nanoid` 3.3.15 → 3.3.18 (infinite loop on zero/negative size). Applied by hand on this branch
+  rather than merging Dependabot's PRs #7–#10, which were closed with a comment pointing here.
+  `brace-expansion` (dev-only, via `eslint`/`eslint-config-next`'s dependency tree) also cleared,
+  swept up by `npm audit fix` alongside the rest — not part of any of the four PRs.
+- Full code and security review ahead of the first public deploy (`npm audit`: 0 vulnerabilities
+  across 457 dependencies). Findings are the Added/Fixed entries above; the review also confirmed
+  no secrets have ever been committed, no server-side attack surface exists (no route handlers,
+  middleware, or server actions), and the dynamic `[slug]` param is exact-matched against a
+  static array rather than interpolated into any lookup.
 
 ## [0.3.0] — 2026-08-10
 
