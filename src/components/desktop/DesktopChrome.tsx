@@ -29,24 +29,42 @@ function WindowLayer() {
   );
 }
 
+// Storage throws in Safari private mode and partitioned frames; unguarded, that
+// exception would escape a useState initializer and take the whole desktop down.
+function readStorage(store: "session" | "local", key: string): string | null {
+  try {
+    return (store === "session" ? sessionStorage : localStorage).getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function writeStorage(store: "session" | "local", key: string, value: string) {
+  try {
+    (store === "session" ? sessionStorage : localStorage).setItem(key, value);
+  } catch {
+    // preference just doesn't persist
+  }
+}
+
 function DesktopRoot() {
   const isMobile = useIsMobile();
   const reducedMotion = usePrefersReducedMotion();
   const [booted, setBooted] = useState(
-    () => sessionStorage.getItem("booted") === "1"
+    () => readStorage("session", "booted") === "1"
   );
   const [crtOn, setCrtOn] = useState(
-    () => localStorage.getItem("crt") !== "off"
+    () => readStorage("local", "crt") !== "off"
   );
 
   const finishBoot = useCallback(() => {
-    sessionStorage.setItem("booted", "1");
+    writeStorage("session", "booted", "1");
     setBooted(true);
   }, []);
 
   const toggleCrt = useCallback(() => {
     setCrtOn((v) => {
-      localStorage.setItem("crt", v ? "off" : "on");
+      writeStorage("local", "crt", v ? "off" : "on");
       return !v;
     });
   }, []);
@@ -66,8 +84,11 @@ function DesktopRoot() {
   // Keep the URL in sync with the focused window so views stay shareable.
   const focusedId = useWindowStore((s) => s.focusedId);
   useEffect(() => {
+    const path = window.location.pathname;
+    // Leave a 404 document's URL alone — don't swallow the broken link.
+    if (path !== "/" && !appIdForPath(path)) return;
     const route = focusedId ? getAppDef(focusedId)?.route : "/";
-    if (route && window.location.pathname !== route) {
+    if (route && path !== route) {
       window.history.replaceState(null, "", route);
     }
   }, [focusedId]);
