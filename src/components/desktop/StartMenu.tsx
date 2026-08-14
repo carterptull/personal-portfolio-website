@@ -78,8 +78,7 @@ function StartMenu({
       role="menu"
       aria-label="Start menu"
       onKeyDown={onKeyDown}
-      // dvh, not vh: the menu is taller than a phone in landscape, and iOS vh
-      // measures the URL-bar-hidden viewport.
+      // dvh, not vh: iOS measures vh against the URL-bar-hidden viewport.
       className="bevel-up absolute bottom-full left-0 z-[8500] mb-0.5 flex max-h-[70dvh] w-60 overflow-y-auto bg-chrome p-0.5"
     >
       <div className="w-6 shrink-0 bg-gradient-to-t from-scarlet to-scarlet-2" aria-hidden="true">
@@ -130,7 +129,7 @@ function StartMenu({
   );
 }
 
-/** Start button plus its menu. Shared verbatim by the desktop and mobile taskbars. */
+/** Button and menu as one unit — both taskbars render this. */
 export function StartButton() {
   const [menuOpen, setMenuOpen] = useState(false);
   const startRef = useRef<HTMLButtonElement>(null);
