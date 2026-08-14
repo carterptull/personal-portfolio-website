@@ -39,15 +39,18 @@ export function ScreensaverGate() {
       timer = setTimeout(() => launch(), IDLE_MS);
     };
 
+    // capture: scroll doesn't bubble, so in-window scrolling wouldn't count.
     ACTIVITY_EVENTS.forEach((ev) =>
-      window.addEventListener(ev, arm, { passive: true })
+      window.addEventListener(ev, arm, { passive: true, capture: true })
     );
     document.addEventListener("visibilitychange", arm);
     arm();
 
     return () => {
       clearTimeout(timer);
-      ACTIVITY_EVENTS.forEach((ev) => window.removeEventListener(ev, arm));
+      ACTIVITY_EVENTS.forEach((ev) =>
+        window.removeEventListener(ev, arm, { capture: true })
+      );
       document.removeEventListener("visibilitychange", arm);
     };
   }, [reducedMotion, launch]);
@@ -69,12 +72,14 @@ export function ScreensaverGate() {
     };
 
     ACTIVITY_EVENTS.forEach((ev) =>
-      window.addEventListener(ev, dismiss, { passive: true })
+      window.addEventListener(ev, dismiss, { passive: true, capture: true })
     );
     document.addEventListener("visibilitychange", onVisibility);
 
     return () => {
-      ACTIVITY_EVENTS.forEach((ev) => window.removeEventListener(ev, dismiss));
+      ACTIVITY_EVENTS.forEach((ev) =>
+        window.removeEventListener(ev, dismiss, { capture: true })
+      );
       document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [active, pending, pointerGraceUntil, exit]);
