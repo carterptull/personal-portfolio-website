@@ -115,11 +115,15 @@ export const projects: Project[] = [
       "Used Next.js so the server-rendered and client-side layers could coexist without slowing down the initial load.",
       "Kept window, focus, and desktop state on the client with Zustand.",
       "Logged the architecture decisions and tradeoffs in a separate design-decisions file as I went.",
+      "Ran a full security and accessibility review before launch, then shipped a Content-Security-Policy and the rest of the security headers, deriving each allowance from what the app actually does rather than copying a template.",
     ],
     outcome:
-      "Live and running the dual-layer setup described above. The interesting parts were the rendering architecture, the low-level pointer handling for drag and resize, and keeping the 3D work off the critical path.",
-    links: { repo: "https://github.com/carterptull/personal-portfolio-website" },
-    status: "Live, you're on it now",
+      "Live at cartertull.com, running the dual-layer setup described above. The interesting parts were the rendering architecture, the low-level pointer handling for drag and resize, keeping the 3D work off the critical path, and writing a CSP strict enough to be worth having without breaking the embedded PDF and video.",
+    links: {
+      repo: "https://github.com/carterptull/personal-portfolio-website",
+      live: "https://cartertull.com",
+    },
+    status: "Live at cartertull.com, you're on it now",
   },
   {
     slug: "universal-web-scraper",
