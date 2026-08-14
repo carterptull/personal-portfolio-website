@@ -6,7 +6,15 @@ export function AboutContent({ onWatch }: { onWatch?: () => void }) {
     <div className="space-y-4 text-[15px] leading-relaxed">
       <header className="flex items-center gap-3">
         {/* eslint-disable-next-line @next/next/no-img-element -- static pixel SVG, no optimization needed */}
-        <img src="/brand-mark.svg" alt="" width={48} height={48} />
+        <img
+          src="/brand-mark.svg"
+          alt=""
+          width={48}
+          height={48}
+          // lazy: skips React 19's auto-preload, which Chrome flags as unused.
+          loading="lazy"
+          decoding="async"
+        />
         <div>
           <h2 className="font-pixel text-xl font-bold">{profile.name}</h2>
           <p className="text-neutral-700">{profile.headline}</p>

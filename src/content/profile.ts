@@ -44,7 +44,7 @@ export const profile = {
     "Software engineer working on AI platforms and cloud services on Google Cloud, mostly turning messy construction documents into structured data a business can use. B.S. in Computer & Information Science from The Ohio State University, 2025.",
   bio: [
     "Software engineer based in Cincinnati, Ohio. I have a little over a year of professional experience building automation focused backend systems, mainly API integrations, data transformation pipelines, and AI powered content extraction. I like taking messy, high volume data and turning it into something a business can actually use, and I try to understand the reasoning behind a system, not just get it working.",
-    "Outside of my day job I build full projects so I can go deeper on applied ML, full stack work, and AI assisted engineering. You can check those out under Projects. Before this I interned at the Federal Home Loan Bank of Cincinnati, and I graduated from Ohio State in 2025 with a B.S. in Computer & Information Science.",
+    "Outside of my day job, I build full projects so I can go deeper on applied ML, full stack work, and AI assisted engineering. You can check those out under Projects. Before this I interned at the Federal Home Loan Bank of Cincinnati, and I graduated from Ohio State in 2025 with a B.S. in Computer & Information Science.",
   ],
   personality: {
     band: {

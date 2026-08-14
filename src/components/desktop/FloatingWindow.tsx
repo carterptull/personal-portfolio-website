@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import type { Win, WinRect } from "@/store/windowStore";
 import { useWindowStore } from "@/store/windowStore";
-import { closeApp, getAppDef } from "./apps";
+import { closeApp, getAppDef, minimizeApp } from "./apps";
 
 const MIN_W = 300;
 const MIN_H = 180;
@@ -34,7 +34,6 @@ export function FloatingWindow({
 }) {
   const ref = useRef<HTMLElement>(null);
   const focus = useWindowStore((s) => s.focus);
-  const minimize = useWindowStore((s) => s.minimize);
   const toggleMax = useWindowStore((s) => s.toggleMax);
   const move = useWindowStore((s) => s.move);
   const resize = useWindowStore((s) => s.resize);
@@ -183,7 +182,7 @@ export function FloatingWindow({
           type="button"
           className="title-btn"
           aria-label={`Minimize ${win.title}`}
-          onClick={() => minimize(win.id)}
+          onClick={() => minimizeApp(win.id)}
         >
           <svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true">
             <rect x="1" y="6" width="6" height="2" fill="#0a0a0a" />

@@ -49,6 +49,10 @@ body {
   outline-offset: 1px;
 }
 
+/* Layered so Tailwind utilities can override these; unlayered CSS would win
+   over any utility set alongside them. See DECISIONS.md. */
+@layer components {
+
 .font-pixel {
   font-family: var(--font-pixel);
   -webkit-font-smoothing: none;
@@ -228,6 +232,9 @@ body {
     inset -2px -2px #808080,
     inset 2px 2px #dfdfdf;
 }
+
+}
+/* end @layer components */
 
 /* ---------- SSR (no-JS) document layer ---------- */
 

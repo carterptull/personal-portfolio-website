@@ -101,7 +101,7 @@ function DesktopRoot() {
         Skip to content
       </a>
       {isMobile ? (
-        <MobileShell />
+        <MobileShell crtOn={crtOn} onToggleCrt={toggleCrt} />
       ) : (
         <div id="desktop-main" tabIndex={-1} className="absolute inset-0 bottom-10 focus:outline-none">
           <h1 className="sr-only">Carter Tull desktop</h1>

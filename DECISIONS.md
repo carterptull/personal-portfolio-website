@@ -170,6 +170,32 @@ make every Vercel preview emit canonical/OG URLs pointing at production. **Alter
 hardcode `https://cartertull.com` now that it exists — rejected; it trades zero-config local
 dev and correct preview metadata for saving one environment variable.
 
+## One Start menu implementation, rendered by both shells
+`StartMenu.tsx` exports `StartButton` — the button, its popup, open/close state, outside-click
+dismissal, and focus-return bundled together — and `Taskbar`/`MobileShell` each just place it.
+**Why:** the menu needs the button's ref to know a click on the button isn't "outside" and to
+restore focus on Escape, so that state can't be split from the markup without duplicating it.
+Exporting only the menu would have each taskbar re-implement the wiring, which is exactly where
+a mobile/desktop behavior fork creeps in. **Alternative:** a mobile-specific bottom-sheet menu —
+rejected; the desktop menu already fits a 390px viewport, and two implementations means two
+things to keep in sync for no gain.
+
+## Component CSS lives in `@layer components`
+**Why:** Tailwind v4's `@import "tailwindcss"` puts utilities in `@layer utilities`, and
+unlayered CSS beats *every* layered rule regardless of specificity. With `.btn95` and friends
+unlayered, any utility set alongside them was silently dead — which is how the mobile close
+button, the only touch way out of a full-screen app, shipped at 18×16px while its markup
+asked for something larger. Wrapping them restores the cascade authors expect.
+**Consequence:** utilities now win over these classes, which is the intent — reach for a
+utility to adjust one instance, and edit the class only to change every instance.
+
+## Touch sizing via `pointer-coarse:`, not a breakpoint
+**Why:** viewport width doesn't tell you the input device — a small window on a desktop isn't
+a finger, and a large tablet is. Gating the 44px minimums on `pointer-coarse:` keeps Win95's
+compact proportions for mouse users while giving touch users real targets, without either
+choice leaking into the other. **Alternative:** bump sizes at the `md:` breakpoint — rejected;
+it would inflate desktop rows for anyone with a narrow window.
+
 ## CSP keeps `'unsafe-inline'` on `script-src` instead of adopting nonces
 `next.config.ts` ships a Content-Security-Policy whose `script-src` allows `'unsafe-inline'`.
 **Why:** all 31 routes prerender to static HTML, and nonces must be unique per response — so a

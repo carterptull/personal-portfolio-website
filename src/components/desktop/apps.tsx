@@ -193,6 +193,15 @@ export function openApp(appId: string, trigger?: HTMLElement | null) {
   store.open({ id: appId, appId, title: def.title, rect });
 }
 
+/** Minimizing the last window leaves focus on <body>, so hand it somewhere. */
+export function minimizeApp(appId: string) {
+  useWindowStore.getState().minimize(appId);
+  requestAnimationFrame(() => {
+    if (useWindowStore.getState().focusedId) return;
+    document.getElementById("desktop-main")?.focus();
+  });
+}
+
 export function closeApp(appId: string) {
   useWindowStore.getState().close(appId);
   const trigger = triggers.get(appId);

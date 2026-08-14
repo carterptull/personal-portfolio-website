@@ -38,7 +38,11 @@ Key modules:
   `setPointerCapture`; writes `transform` to the DOM ref during move, commits to the
   store only on pointerup. Never commit per-move.
 - `src/components/desktop/MobileShell.tsx` + `src/hooks/useIsMobile.ts` — <768px renders
-  full-screen apps (Back control, bottom bar) instead of floating windows.
+  full-screen apps (titlebar with an X, bottom bar) instead of floating windows. The bottom
+  bar carries the same Start button and CRT toggle as the desktop taskbar.
+- `src/components/desktop/StartMenu.tsx` — exports `StartButton`: the button, its menu, and
+  all its state as one unit. Both `Taskbar` and `MobileShell` render it, so Start-menu
+  behavior has exactly one implementation. Don't fork a mobile variant.
 - `src/store/screensaverStore.ts` + `src/components/screensaver/ScreensaverGate.tsx` — 3D Pipes
   mounts after ~60s idle (or on demand via the "3D Pipes" icon/Start Menu row, which is an
   `AppDef.launch` that `openApp` delegates to) via dynamic import; disposes on input. Idle
@@ -69,6 +73,11 @@ Key modules:
   (skip boot, screensaver, animations).
 - Boot sequence is an overlay over already-rendered content, skippable, once per session.
 - Perf budget: LCP ≤2.0s, INP ≤200ms, CLS ≤0.1, critical JS <~150 KB gzip.
+- Component classes in `globals.css` (`.btn95`, `.title-btn`, `.desktop-icon`, bevels) live
+  inside `@layer components`. Keep them there — unlayered CSS beats every layered rule
+  regardless of specificity, so moving them out makes Tailwind utilities set alongside them
+  silently stop working.
+- Touch-target bumps go on the `pointer-coarse:` variant, so desktop keeps Win95 proportions.
 - Keep comments minimal; only explain what the code can't say itself.
 
 ## Adding a project later
