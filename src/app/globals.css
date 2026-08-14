@@ -49,10 +49,8 @@ body {
   outline-offset: 1px;
 }
 
-/* Everything down to the SSR-layer section is wrapped in @layer components so
-   Tailwind utilities can override it. Unlayered CSS beats every layered rule
-   regardless of specificity, so without this a class like .btn95 silently wins
-   over any utility set alongside it (min-h-9, px-2, h-8 w-9 ...). */
+/* Layered so Tailwind utilities can override these; unlayered CSS would win
+   over any utility set alongside them. See DECISIONS.md. */
 @layer components {
 
 .font-pixel {
