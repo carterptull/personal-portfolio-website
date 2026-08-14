@@ -6,6 +6,62 @@ follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.1] — 2026-08-14
+
+Patch release, almost entirely mobile. The first release made from a live site, so several
+items came from using it on an actual phone rather than from a desktop browser at 390px.
+
+### Added
+- The Start menu now works on mobile. `StartMenu.tsx` is a new module exporting `StartButton`
+  (the button, its menu, open/close state, outside-click dismissal, and focus return as one
+  unit), which both `Taskbar` and `MobileShell` render — so there is one implementation of
+  Start-menu behavior rather than a mobile copy free to drift from the desktop one.
+- The CRT toggle is in the mobile taskbar. The CRT overlay already rendered on mobile; only
+  the control to turn it off was missing, so the preference was unreachable on a phone.
+- Touch targets scale up only on touch devices, via the `pointer-coarse:` variant. Desktop
+  keeps its compact Win95 row heights.
+
+### Fixed
+- **Component classes silently beat every Tailwind utility.** `globals.css` defined `.btn95`,
+  `.title-btn`, `.desktop-icon` and the bevels outside any cascade layer, while Tailwind v4
+  puts utilities in `@layer utilities` — and unlayered CSS wins over *all* layered CSS
+  regardless of specificity. Any utility set alongside those classes was dead. The visible
+  consequence: the mobile full-screen app's close button, the only touch way out of an open
+  app, rendered at **18×16px** instead of the intended size. Those rules are now wrapped in
+  `@layer components`, which fixes the close button (now 44×36) and makes every existing
+  utility override in the codebase start working.
+- The mobile taskbar button said "Carter Tull" and only minimized open windows, which looked
+  broken when tapped from the icon grid with nothing open. It is now a real Start button.
+- The mobile close control was a back arrow (←) on the left; it is now an X on the right,
+  matching the desktop titlebar and Windows 95.
+- Minimizing the last visible window dropped focus to `<body>`, stranding keyboard users at
+  the top of the tab order. `minimizeApp()` now hands focus to the desktop, mirroring what
+  `closeApp()` already did.
+- The idle screensaver could fire while reading. `scroll` doesn't bubble, so scrolling inside
+  a window never counted as activity; the listeners are now registered with `capture: true`
+  (on both the arm and dismiss paths, with matching `removeEventListener` options so nothing
+  leaks).
+- `aria-modal="true"` on the mobile full-screen app told assistive tech to ignore everything
+  outside it, but the taskbar stayed live and Tab-reachable — and now holds the Start and CRT
+  buttons. Dropped, since keeping the taskbar reachable is the intent.
+- Both taskbars carried `aria-label` on a role-less `<div>`, where it is discarded. They are
+  `<nav>` elements now. (`role="toolbar"` was deliberately not used: it obliges roving-tabindex
+  arrow-key navigation that neither taskbar implements.)
+- The Start menu is capped at `70dvh` and scrolls, so it can't overflow past the top of the
+  viewport on a phone in landscape, where the parent is `overflow-hidden` and it would be
+  unrecoverable. `dvh` rather than `vh` because iOS measures `vh` against the URL-bar-hidden
+  viewport.
+- The decorative brand mark in the About window is `loading="lazy"`, stopping React 19 from
+  auto-injecting a preload that Chrome then warned was unused on every page load.
+
+### Changed
+- The Personal Portfolio Website project entry records that the site is live at
+  `cartertull.com`, links to it, and mentions the pre-launch security review and CSP work.
+- Dependency patches: `next` 16.3.0→16.3.1, `react`/`react-dom` 19.2.7→19.2.8, `tailwindcss`
+  and `@tailwindcss/postcss` 4.3.2→4.3.3, `@react-three/fiber` 9.6.1→9.7.0, plus type packages
+  and `eslint-config-next`. `npm audit` reports 0 vulnerabilities across 457 dependencies.
+  `eslint` 10, `typescript` 7, and `three` 0.185 are deliberately held back.
+
 ## [1.0.0] — 2026-08-13
 
 First public release, on the `cartertull.com` domain. The version reflects a site that is
