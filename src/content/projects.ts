@@ -60,9 +60,12 @@ export const projects: Project[] = [
       "Shipped the FastAPI backend and Next.js frontend with Alembic migrations, Docker, and CI running a 39-test suite.",
     ],
     outcome:
-      "The model gets close to closing-line accuracy on public data alone. Calibration and walk-forward validation were the parts that mattered most, since both are easy to skip and both are what make the benchmark mean anything.",
-    links: { repo: "https://github.com/carterptull/blitzcast" },
-    status: "In progress, source on GitHub",
+      "The model gets close to closing-line accuracy on public data alone. Calibration and walk-forward validation were the parts that mattered most, since both are easy to skip and both are what make the benchmark mean anything. Live now at blitzcast.app, with the model and UI both still being actively improved.",
+    links: {
+      repo: "https://github.com/carterptull/blitzcast",
+      live: "https://www.blitzcast.app",
+    },
+    status: "Live at blitzcast.app, actively improved",
   },
   {
     slug: "claude-code-workbench",
