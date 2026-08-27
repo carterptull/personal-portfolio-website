@@ -10,6 +10,7 @@ import {
   IconContact,
   IconDocument,
   IconFolder,
+  IconFootball,
   IconMedia,
   IconScreensaver,
   IconSkills,
@@ -56,6 +57,13 @@ const ResumeContent = dynamic(
   () => import("@/components/content/ResumeContent").then((m) => m.ResumeContent),
   { loading }
 );
+const BlitzcastContent = dynamic(
+  () =>
+    import("@/components/content/BlitzcastContent").then(
+      (m) => m.BlitzcastContent
+    ),
+  { loading }
+);
 
 // An app either opens a window (w/h/render) or takes over the screen itself
 // (launch) — never both. openApp() honours `launch` so the distinction can't be
@@ -75,6 +83,7 @@ export const DESKTOP_APP_IDS = [
   "projects",
   "skills",
   "screensaver",
+  "blitzcast",
   "resume",
   "contact",
 ] as const;
@@ -116,6 +125,13 @@ const APPS: Record<string, AppDef> = {
     title: "3D Pipes",
     Icon: IconScreensaver,
     launch: () => useScreensaverStore.getState().launch({ manual: true }),
+  },
+  blitzcast: {
+    title: "Blitzcast",
+    Icon: IconFootball,
+    w: 720,
+    h: 640,
+    render: () => <BlitzcastContent />,
   },
   resume: {
     title: "Resume",
