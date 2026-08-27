@@ -177,3 +177,37 @@ export const IconContact = (p: { size?: number }) => (
 export const IconWordDoc = (p: { size?: number }) => (
   <PixelIcon px={wordDocPx} {...p} />
 );
+
+// Football standing on end: chrome oval, matching every other icon's
+// palette instead of a one-off brown. Raised bevel (light top-left, dark
+// bottom-right) matches the same light/dark convention computerPx and
+// folderPx use for their frames. Dark seam, white lace ticks.
+const footballPx: Px[] = [
+  [6, 2, 4, 1, C.chrome],
+  [4, 3, 8, 1, C.chrome],
+  [3, 4, 10, 1, C.chrome],
+  [2, 5, 12, 1, C.chrome],
+  [2, 6, 12, 1, C.chrome],
+  [1, 7, 14, 1, C.chrome],
+  [1, 8, 14, 1, C.chrome],
+  [2, 9, 12, 1, C.chrome],
+  [2, 10, 12, 1, C.chrome],
+  [3, 11, 10, 1, C.chrome],
+  [4, 12, 8, 1, C.chrome],
+  [6, 13, 4, 1, C.chrome],
+  [5, 3, 3, 1, C.light],
+  [4, 4, 3, 1, C.light],
+  [3, 5, 3, 1, C.light],
+  [2, 6, 3, 1, C.light],
+  [1, 7, 3, 1, C.light],
+  [10, 10, 4, 1, C.dark],
+  [9, 11, 5, 1, C.dark],
+  [8, 12, 4, 1, C.dark],
+  [6, 8, 4, 1, C.ink],
+  [6, 7, 1, 3, C.white],
+  [8, 7, 1, 3, C.white],
+];
+
+export const IconFootball = (p: { size?: number }) => (
+  <PixelIcon px={footballPx} {...p} />
+);

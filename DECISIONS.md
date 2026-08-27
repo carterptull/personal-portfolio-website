@@ -209,6 +209,24 @@ with real user input; revisit the moment this site gains a form or a dynamic rou
 **Consequence:** `'unsafe-eval'` is added in development only, because React's dev build uses
 `eval()` for callstack reconstruction and its production build never does.
 
+## Blitzcast is a desktop-only app with no SSR route, embedded cross-origin
+
+The Blitzcast icon opens a window (`BlitzcastContent`) that iframes `https://www.blitzcast.app`
+directly — unlike every other window, which either renders `src/content/*` data or a same-origin
+asset. It has no entry in `DESKTOP_APP_IDS`'s route mapping (`appIdForPath`) and no `/blitzcast`
+page, so it's reachable only from the desktop icon, never crawlable. **Why:** Blitzcast is a
+separate, fully-formed Next.js app on its own domain — duplicating its UI as `src/content/*` data
+would mean maintaining two copies of the same product, and this site's own dual-layer rule is
+about *this site's* content staying server-rendered, not about every third-party link needing an
+SSR mirror. **Alternative:** a plain external link (no window at all) — simpler and avoids the
+cross-origin framing question below entirely, but the resume icon already sets the "open it right
+here, with an escape hatch to a new tab" pattern, and that's what was asked for.
+**Consequence:** `frame-src` on this site's CSP had to allowlist `https://www.blitzcast.app`
+(next to the existing `'self'` and YouTube allowances), and blitzcast.app's own deploy needed a
+`frame-ancestors` header scoped back to this domain — see that repo's DECISIONS.md. Unlike the
+resume PDF, a blocked iframe here fails silent (blank, no fallback content), so both ends were
+verified against real production builds, not just read on paper.
+
 ## Framing headers are `'self'`/`SAMEORIGIN`, not `'none'`/`DENY`
 **Why:** the header block applies to `/:path*`, which includes `/Carter-Tull-Resume.pdf`. Chrome
 renders a PDF `<object>` through an internal viewer frame, so `'none'`/`DENY` left the resume
