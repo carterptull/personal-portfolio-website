@@ -133,7 +133,7 @@ export function FloatingWindow({
 
   const maximized = win.state === "maximized";
   const style: React.CSSProperties = maximized
-    ? { left: 0, top: 0, width: "100%", height: `calc(100% - ${TASKBAR_H}px)`, zIndex }
+    ? { left: 0, top: 0, width: "100%", height: "100%", zIndex }
     : {
         width: win.rect.w,
         height: win.rect.h,

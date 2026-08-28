@@ -237,3 +237,15 @@ second `headers()` entry — more moving parts for no additional protection, sin
 frame of your own page is not a clickjacking vector. **How this was found:** not by reading the
 spec — by loading a production build in a real browser and watching the resume window come up
 blank. Both CSP bugs looked correct on paper.
+
+## Bug: maximized windows left a taskbar-height strip of desktop visible
+
+`FloatingWindow`'s maximized style set `height: calc(100% - TASKBAR_H)`, but its parent,
+`#desktop-main` (`DesktopChrome.tsx`), is already inset `bottom-10` (the same `TASKBAR_H`) to
+clear the taskbar. The window was subtracting the taskbar's height twice — once via its parent's
+inset, once via its own style — leaving a `TASKBAR_H`-tall gap of visible desktop above the
+taskbar on every maximized window. Fixed by setting maximized height to a plain `100%`, since the
+parent already stops short of the taskbar. `TASKBAR_H` is still used for drag-clamping (`onTitleMove`),
+which measures against `window.innerHeight` (the real viewport), not the already-inset parent —
+that usage was correct and untouched. **How this was found:** reported visually, not caught by
+lint or the build — a percentage-based layout bug like this has no type error or crash to surface it.
