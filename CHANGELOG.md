@@ -6,6 +6,18 @@ follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- `diagrams/` — nine hand-maintained Mermaid diagrams (C4 context/container, a component
+  diagram of the dual-layer architecture, a class diagram of the core data model, a window
+  lifecycle state diagram, boot-sequence/open-app-flow sequence diagrams, a deployment/security
+  diagram, and a one-page overview linking all of them), each stamped with the version it
+  reflects. Linked from `README.md`, `CLAUDE.md`, `SECURITY.md`, and `DECISIONS.md`.
+
+### Fixed
+- `SECURITY.md` said `X-Frame-Options: DENY`; `next.config.ts` has shipped `SAMEORIGIN` since
+  the "Framing headers are `'self'`/`SAMEORIGIN`, not `'none'`/`DENY`" decision — the policy
+  doc just hadn't been updated to match.
+
 ## [1.1.2] — 2026-09-14
 
 Dependency maintenance. Resolves the peer-dependency conflict that was failing every

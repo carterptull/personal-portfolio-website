@@ -53,8 +53,10 @@ Two layers, same content:
 
 More detail in [CLAUDE.md](CLAUDE.md) (architecture map),
 [DECISIONS.md](DECISIONS.md) (why each choice was made),
-[CHANGELOG.md](CHANGELOG.md) (release history), and
-[SECURITY.md](SECURITY.md) (how to report a vulnerability).
+[CHANGELOG.md](CHANGELOG.md) (release history),
+[SECURITY.md](SECURITY.md) (how to report a vulnerability), and
+[diagrams/](diagrams/) (C4, state, sequence, and class diagrams of the above — start with
+[diagrams/overview.md](diagrams/overview.md)).
 
 ## Project structure
 
