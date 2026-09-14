@@ -10,10 +10,10 @@ attack surface is the dependency tree, the build/deploy pipeline, and the respon
 Only the latest release and the current `main` are supported. There are no maintained release
 branches; fixes ship forward.
 
-| Version | Supported |
-| ------- | --------- |
-| 1.0.x   | Yes       |
-| < 1.0   | No        |
+| Version                          | Supported |
+| --------------------------------- | --------- |
+| Latest release (currently 1.1.2) | Yes       |
+| Anything older                   | No        |
 
 ## Reporting a vulnerability
 

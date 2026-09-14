@@ -17,6 +17,12 @@ follow [SemVer](https://semver.org/).
 - `SECURITY.md` said `X-Frame-Options: DENY`; `next.config.ts` has shipped `SAMEORIGIN` since
   the "Framing headers are `'self'`/`SAMEORIGIN`, not `'none'`/`DENY`" decision — the policy
   doc just hadn't been updated to match.
+- `CLAUDE.md` pointed to `portfolio-implementation-plan.md` as the "authoritative spec" — a
+  file that has never once existed in this repo's git history. Reworded to say what's actually
+  true: `CLAUDE.md` itself is the architecture map, `DECISIONS.md` the decision log.
+- `SECURITY.md`'s supported-versions table still said `1.0.x`, three patch releases behind
+  the version it shipped next to. Reworded to name "latest release" rather than a hardcoded
+  minor, so it can't drift out of sync with the version bump again.
 
 ## [1.1.2] — 2026-09-14
 
