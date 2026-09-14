@@ -42,7 +42,10 @@ what an attacker gains.
 
 ## Current posture
 
-- **Response headers** (`next.config.ts`): CSP, `X-Frame-Options: DENY`, `X-Content-Type-Options`,
+See [`diagrams/deployment-security.md`](diagrams/deployment-security.md) for the request path
+through Vercel and where the CSP's exceptions below come from.
+
+- **Response headers** (`next.config.ts`): CSP, `X-Frame-Options: SAMEORIGIN`, `X-Content-Type-Options`,
   `Referrer-Policy`, `Permissions-Policy`, and HSTS with `preload`.
 - **Known CSP trade-off:** `script-src` includes `'unsafe-inline'`. A nonce-based policy requires
   per-request rendering, which would defeat the fully-static delivery this site's performance

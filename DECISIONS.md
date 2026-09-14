@@ -1,7 +1,9 @@
 # DECISIONS.md
 
 Concise log of significant technical decisions — what / why / alternative considered.
-Kept for the owner's reference (interview prep, future maintenance).
+Kept for the owner's reference (interview prep, future maintenance). Several entries below
+have a visual counterpart in [`diagrams/`](diagrams/) — start at
+[`diagrams/overview.md`](diagrams/overview.md).
 
 ## Dual-layer architecture (SSR content + client desktop chrome)
 All content lives at real server-rendered routes (`/`, `/about`, `/projects/[slug]`, …) as

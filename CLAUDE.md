@@ -18,6 +18,8 @@ set it in `.env.local` when deploying. Vercel Analytics/Speed Insights only rend
 ## Architecture — dual layer (the one rule that matters)
 
 Content and desktop chrome are separate layers. Content must never exist only inside a window.
+Diagrammed in [`diagrams/dual-layer-architecture.md`](diagrams/dual-layer-architecture.md)
+(start at [`diagrams/overview.md`](diagrams/overview.md) for the whole system at a glance).
 
 1. **SSR content layer** — real, crawlable routes rendered server-side:
    `/`, `/about`, `/projects`, `/projects/[slug]`, `/contact` (`src/app/**`), wrapped in
