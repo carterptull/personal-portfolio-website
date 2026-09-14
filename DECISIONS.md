@@ -249,3 +249,26 @@ parent already stops short of the taskbar. `TASKBAR_H` is still used for drag-cl
 which measures against `window.innerHeight` (the real viewport), not the already-inset parent —
 that usage was correct and untouched. **How this was found:** reported visually, not caught by
 lint or the build — a percentage-based layout bug like this has no type error or crash to surface it.
+
+## React and TypeScript pinned below their next major with `~`, not `^`
+
+Every Vercel deploy started failing `npm install` with an `ERESOLVE` once React 19.3.0 hit the
+registry: `@react-three/fiber@9.7.0` (the 3D Pipes screensaver) declares `peerDependencies.react
+">=19 <19.3"`, and `^19.2.7` in `package.json` permits 19.3.0 too — caret ranges only hold the
+major version fixed, not the minor. Re-pinning to `^19.2.7` (or any caret) doesn't fix this; the
+same registry publish breaks it again. `react`/`react-dom` are pinned with `~19.2.8` instead —
+tilde holds the minor fixed, so npm can still take 19.2.x patches but not 19.3.0 — until fiber
+ships a release whose peer range covers it.
+
+The same shape of bug exists one dependency deeper for `typescript`: `eslint-config-next`
+bundles `typescript-eslint`, whose parser packages cap `typescript` at `"<6.1.0"`. That blocked
+Dependabot's `typescript` 6→7 bump the same way `fiber` blocked React. `typescript` stays on
+`^6.0.3` for the same reason — not because 7.x itself is unsupported, but because a peer three
+levels removed hasn't caught up. Both ceilings are upstream, not ours; there's nothing to fix
+locally besides waiting and re-attempting the bump once fiber/typescript-eslint move.
+
+**Why not `--legacy-peer-deps` or an `overrides` force instead:** that silences npm's warning
+but doesn't change what `@react-three/fiber` actually does at runtime with a React version its
+authors excluded — the peer range is a real compatibility statement here, not registry
+housekeeping. Forcing it risks a working build that breaks the screensaver in production instead
+of failing loudly in CI, which is strictly worse.

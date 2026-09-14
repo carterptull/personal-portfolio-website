@@ -6,6 +6,28 @@ follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.1.2] — 2026-09-14
+
+Dependency maintenance. Resolves the peer-dependency conflict that was failing every
+Vercel deployment, and closes out the security advisories Dependabot had open.
+
+### Fixed
+- **Vercel builds were failing on `npm install`.** Dependabot's grouped React bump pulled
+  react/react-dom to 19.3.0, but `@react-three/fiber@9.7.0` (the 3D Pipes screensaver)
+  caps its peer range at `react "<19.3"` — no stable fiber release lifts that yet. `react`
+  and `react-dom` are now pinned with `~19.2.8` (tilde, not caret) so a future 19.2.x patch
+  can't silently jump past that ceiling again. The equivalent `typescript-eslint` ceiling
+  (`typescript "<6.1.0"`, nested under `eslint-config-next`) blocked the dev-tooling
+  group's TypeScript 7 bump the same way; `typescript` stays on `^6.0.3` until that catches
+  up too. See `DECISIONS.md`.
+- Two high-severity advisories: `js-yaml` (GHSA-2883-xcg3-v3hh, uncapped CPU use on merge
+  keys) via `eslint`'s dependency chain, and `sharp` (GHSA-rgj7-g3m4-5g8c, libheif memory
+  corruption) via `next`'s image pipeline. `npm audit` reports zero vulnerabilities.
+
+### Changed
+- `next` 16.3.2 → 16.3.5, `eslint-config-next` 16.2.10 → 16.3.5, `three` 0.185.1 → 0.186.0
+  (with matching `@types/three`), `postcss` 8.5.26 → 8.5.28, `@types/node` 26.1.0 → 26.5.1.
+
 ## [1.0.1] — 2026-08-14
 
 Patch release, almost entirely mobile. The first release made from a live site, so several
