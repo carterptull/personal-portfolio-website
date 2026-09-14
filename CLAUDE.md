@@ -1,7 +1,7 @@
 # CLAUDE.md
 
 Personal portfolio for **Carter Tull**, built as a retro Windows 95/98 desktop.
-Authoritative spec: `portfolio-implementation-plan.md`. Decision log: `DECISIONS.md`.
+This file is the architecture map. Decision log: `DECISIONS.md`. Diagrams: `diagrams/`.
 
 ## Commands
 
