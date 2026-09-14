@@ -6,21 +6,21 @@ not in `windows: Record<id, Win>` at all is "closed," which isn't a stored state
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Normal : openApp(id)\n→ store.open() (new window)
+    [*] --> Normal : openApp(id) → store.open() (new window)
 
     state Normal {
         [*] --> Idle
-        Idle --> Moving : pointerdown on titlebar\n+ setPointerCapture
-        Moving --> Idle : pointerup\n→ commits x/y to store (once)
+        Idle --> Moving : pointerdown on titlebar + setPointerCapture
+        Moving --> Idle : pointerup → commits x/y to store (once)
         Idle --> Resizing : pointerdown on resize handle
-        Resizing --> Idle : pointerup\n→ commits rect to store (once)
+        Resizing --> Idle : pointerup → commits rect to store (once)
     }
 
     Normal --> Minimized : minimizeApp(id)
-    Minimized --> Normal : openApp(id) again\n→ restores + focuses
+    Minimized --> Normal : openApp(id) again → restores + focuses
 
-    Normal --> Maximized : toggleMax(id)\n(saves rect → prevRect)
-    Maximized --> Normal : toggleMax(id)\n(restores prevRect)
+    Normal --> Maximized : toggleMax(id), saves rect to prevRect
+    Maximized --> Normal : toggleMax(id), restores prevRect
 
     Normal --> [*] : closeApp(id)
     Minimized --> [*] : closeApp(id)
