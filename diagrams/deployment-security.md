@@ -6,9 +6,9 @@ policy lives in `SECURITY.md`; this shows the *mechanism* behind it.
 ```mermaid
 flowchart TB
     dev["Local dev / PR branch"] -->|git push| gh["GitHub"]
-    gh -->|CI: lint + build\n.github/workflows/ci.yml| ci{{"Checks pass?"}}
-    ci -->|"no"| blocked["Merge blocked\nmain is protected, admins included"]
-    ci -->|"yes, on main"| build["Vercel build\nnext build — every route prerendered"]
+    gh -->|"CI: lint + build<br/>.github/workflows/ci.yml"| ci{{"Checks pass?"}}
+    ci -->|"no"| blocked["Merge blocked<br/>main is protected, admins included"]
+    ci -->|"yes, on main"| build["Vercel build<br/>next build — every route prerendered"]
     build --> cdn[("Vercel CDN / Edge")]
 
     visitor(["Visitor browser"]) -->|"GET /:path*"| cdn
@@ -16,7 +16,7 @@ flowchart TB
 
     subgraph headers["Response headers — next.config.ts, applied to /:path*"]
         csp["Content-Security-Policy"]
-        other["X-Frame-Options: SAMEORIGIN\nX-Content-Type-Options: nosniff\nReferrer-Policy\nPermissions-Policy\nStrict-Transport-Security (preload)"]
+        other["X-Frame-Options: SAMEORIGIN<br/>X-Content-Type-Options: nosniff<br/>Referrer-Policy<br/>Permissions-Policy<br/>Strict-Transport-Security (preload)"]
     end
 
     cdn -.-> headers

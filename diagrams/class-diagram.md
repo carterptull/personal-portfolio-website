@@ -85,9 +85,9 @@ classDiagram
     WindowStore "1" o-- "*" Win : windows
     AppDef <|-- WindowedApp
     AppDef <|-- LaunchApp
-    LaunchApp ..> ScreensaverStore : launch()\ndelegates to
+    LaunchApp ..> ScreensaverStore : launch() delegates to
     Project "1" *-- "1" Links : links
-    WindowedApp ..> Project : project: apps used\nfor getAppDef("project:<slug>")
+    WindowedApp ..> Project : looked up via getAppDef
 ```
 
 **Why `AppDef` is a discriminated union, not one shape with optional fields:** a window-opening
