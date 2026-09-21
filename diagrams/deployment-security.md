@@ -49,8 +49,8 @@ requirement: verify any CSP edit against `npm run build && npx next start` in a 
 No backend, no database, no auth, no cookies, no user input anywhere in the app — every route
 is prerendered at build time and served as static HTML from a CDN. `NEXT_PUBLIC_SITE_URL` is
 the only environment variable, and it's a public value by design. Dependabot (grouped weekly
-updates + security alerts) and secret-scanning push protection are enabled at the repo level.
+updates + security alerts; React 19.3+ and TypeScript 7+ ignored until upstream peers support them) and secret-scanning push protection are enabled at the repo level.
 See `SECURITY.md` for the reporting policy and scope.
 
 ---
-_Last updated: 2026-09-14 · reflects v1.1.2_
+_Last updated: 2026-09-21 · reflects v1.1.3_

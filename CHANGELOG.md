@@ -6,14 +6,19 @@ follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
-### Added
-- `diagrams/` — nine hand-maintained Mermaid diagrams (C4 context/container, a component
-  diagram of the dual-layer architecture, a class diagram of the core data model, a window
-  lifecycle state diagram, boot-sequence/open-app-flow sequence diagrams, a deployment/security
-  diagram, and a one-page overview linking all of them), each stamped with the version it
-  reflects. Linked from `README.md`, `CLAUDE.md`, `SECURITY.md`, and `DECISIONS.md`.
+## [1.1.3] — 2026-09-21
+
+Dependency maintenance. Stops Dependabot from re-proposing the two bumps that are still
+blocked upstream, which were failing Vercel preview deploys and CI on every weekly run.
 
 ### Fixed
+- Dependabot PRs #37 (`react`/`react-dom` 19.3) and #38 (`typescript` 7) both failed:
+  `@react-three/fiber@9.7.0` still peers `react "<19.3"` (`npm install` ERESOLVE, the Vercel
+  build failure), and `typescript-eslint@8.70.1` still peers `typescript "<6.1.0"` (lint
+  aborts with "does not support TS 7.0"). Neither upstream has moved since 1.1.2.
+  `.github/dependabot.yml` now ignores `react`, `react-dom`, `@types/react`,
+  `@types/react-dom` at `>=19.3.0` and `typescript` major bumps, so the failing PRs stop
+  being opened. Remove those entries when the upstream ranges lift.
 - `SECURITY.md` said `X-Frame-Options: DENY`; `next.config.ts` has shipped `SAMEORIGIN` since
   the "Framing headers are `'self'`/`SAMEORIGIN`, not `'none'`/`DENY`" decision — the policy
   doc just hadn't been updated to match.
@@ -23,6 +28,16 @@ follow [SemVer](https://semver.org/).
 - `SECURITY.md`'s supported-versions table still said `1.0.x`, three patch releases behind
   the version it shipped next to. Reworded to name "latest release" rather than a hardcoded
   minor, so it can't drift out of sync with the version bump again.
+
+### Added
+- `diagrams/` — nine hand-maintained Mermaid diagrams (C4 context/container, a component
+  diagram of the dual-layer architecture, a class diagram of the core data model, a window
+  lifecycle state diagram, boot-sequence/open-app-flow sequence diagrams, a deployment/security
+  diagram, and a one-page overview linking all of them), each stamped with the version it
+  reflects. Linked from `README.md`, `CLAUDE.md`, `SECURITY.md`, and `DECISIONS.md`.
+
+### Changed
+- `@types/node` 26.5.1 → 26.6.2.
 
 ## [1.1.2] — 2026-09-14
 

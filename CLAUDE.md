@@ -81,6 +81,9 @@ Key modules:
   silently stop working.
 - Touch-target bumps go on the `pointer-coarse:` variant, so desktop keeps Win95 proportions.
 - Keep comments minimal; only explain what the code can't say itself.
+- `react`/`react-dom` stay on `~19.2.x` and `typescript` on `^6` until `@react-three/fiber` and
+  `typescript-eslint` widen their peer ranges. Don't bump them or use `--legacy-peer-deps`;
+  `.github/dependabot.yml` ignores those versions. Rationale in `DECISIONS.md`.
 
 ## Adding a project later
 
