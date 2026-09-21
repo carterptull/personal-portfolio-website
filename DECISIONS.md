@@ -269,6 +269,16 @@ Dependabot's `typescript` 6→7 bump the same way `fiber` blocked React. `typesc
 levels removed hasn't caught up. Both ceilings are upstream, not ours; there's nothing to fix
 locally besides waiting and re-attempting the bump once fiber/typescript-eslint move.
 
+**Dependabot is told to skip them (`.github/dependabot.yml` `ignore`).** Pinning alone fixed
+`main`, but Dependabot kept opening PRs for the blocked versions — it even rewrote `~19.2.8` to
+`~19.3.0` — and each one failed CI and produced a failed Vercel preview and a failure email
+(#37 and #38, a week after this fix). The ignore rules cover `react`/`react-dom`/`@types/react`/
+`@types/react-dom` at `>=19.3.0` and `typescript` major bumps. The rules only govern
+routine version-update PRs, not repo-level security alerts. **To lift:** when `@react-three/fiber` widens its `react` peer and `typescript-eslint` widens
+`typescript`, delete the matching `ignore` entries, relax the `~`/`^` pins, and let Dependabot
+open the bump. Check with `npm view @react-three/fiber peerDependencies` and
+`npm view typescript-eslint peerDependencies`.
+
 **Why not `--legacy-peer-deps` or an `overrides` force instead:** that silences npm's warning
 but doesn't change what `@react-three/fiber` actually does at runtime with a React version its
 authors excluded — the peer range is a real compatibility statement here, not registry

@@ -14,6 +14,21 @@ updates:
         patterns: ["three", "@types/three", "@react-three/*"]
       dev-tooling:
         dependency-type: development
+    # Blocked by upstream peer ranges; each PR fails `npm install`/lint until they lift.
+    # Remove these entries once the named package ships support. See DECISIONS.md.
+    ignore:
+      # @react-three/fiber peers react/react-dom ">=19 <19.3"
+      - dependency-name: react
+        versions: [">=19.3.0"]
+      - dependency-name: react-dom
+        versions: [">=19.3.0"]
+      - dependency-name: "@types/react"
+        versions: [">=19.3.0"]
+      - dependency-name: "@types/react-dom"
+        versions: [">=19.3.0"]
+      # typescript-eslint peers typescript "<6.1.0"
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: "/"

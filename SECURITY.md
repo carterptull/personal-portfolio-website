@@ -53,7 +53,9 @@ through Vercel and where the CSP's exceptions below come from.
   surface is compile-time constants only, and `frame-ancestors 'none'` closes the realistic
   (clickjacking) threat. Revisit if the site ever gains a dynamic route or a form.
 - **Dependencies:** Dependabot alerts, automated security updates, and grouped weekly version
-  updates (`.github/dependabot.yml`) are enabled.
+  updates (`.github/dependabot.yml`) are enabled. The config ignores `react` 19.3+ and
+  `typescript` 7+ because upstream peer ranges (`@react-three/fiber`, `typescript-eslint`)
+  don't support them yet — see `DECISIONS.md`.
 - **Secrets:** none in source. The only environment variable, `NEXT_PUBLIC_SITE_URL`, is a public
   value by design. Secret scanning with push protection is enabled on the repository.
 - **CI:** every push and pull request to `main` must pass lint and build; the workflow runs with
