@@ -12,7 +12,7 @@ branches; fixes ship forward.
 
 | Version                          | Supported |
 | --------------------------------- | --------- |
-| Latest release (currently 1.1.2) | Yes       |
+| Latest release                    | Yes       |
 | Anything older                   | No        |
 
 ## Reporting a vulnerability

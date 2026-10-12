@@ -115,8 +115,19 @@ copy to a patched version. Next 16.3.0 now bundles postcss 8.5.23 natively, but 
 stayed — bumped to `^8.5.26` alongside the direct `postcss` devDependency — to close two more
 postcss CVEs (GHSA-r28c-9q8g-f849, GHSA-fxqj-rqcc-2cmp; both fixed at 8.5.18/8.5.23) that
 surfaced after the original override was written. **Why:** clears `npm audit` without
-`--force`. Re-check whether the override is still load-bearing next time Next is upgraded —
-it may have become redundant now that Next ships a sufficiently patched postcss itself.
+`--force`. Next 16.4.0 bundles postcss 8.5.23, which is the patched version, so the override is
+no longer needed to clear the CVEs. It stays because it dedupes Next onto the top-level
+`postcss` (one copy in the tree), and removing it would reintroduce a nested copy.
+
+## Accepted: unpatched dev-only `braces` advisory
+`npm audit` flags `braces` ≤3.0.3 (GHSA-vfj7-8cjw-p6xm, stack-exhaustion DoS on deeply nested
+patterns). No patched `braces` exists on npm (3.0.3 is the latest), so there is nothing to
+upgrade to. It is reached only via `eslint-config-next` → `fast-glob` → `micromatch` → `braces`,
+i.e. lint tooling that runs on this repo's own files. `npm audit --omit=dev` is clean, so nothing
+vulnerable ships to the site. **Alternatives rejected:** `npm audit fix --force` proposes
+downgrading `eslint-config-next` to 14.2.35, which would break lint on Next 16; a `braces`
+override has no safe target. **To revisit:** when `micromatch` or `fast-glob` drops `braces`,
+or a patched `braces` is published.
 
 ## Resume as a desktop app, not a route
 Word-style desktop icon opens a window with the PDF in an `<object>` viewer plus

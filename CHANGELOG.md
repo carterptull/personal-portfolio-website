@@ -6,6 +6,32 @@ follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.1.4] — 2026-10-12
+
+Security maintenance. Clears every open Dependabot alert and folds in the four open Dependabot
+PRs (#40–#43) as one reviewed change instead of four separate merges.
+
+### Fixed
+- **Critical `next` advisory.** `next` 16.3.5 → 16.4.0 clears every advisory in the 16.0.0–16.3.7
+  range, including remote code execution in `next/og` `ImageResponse` (GHSA-vcvr-r3jv-pc5j, used
+  by the OG image routes), SSRF in image optimization (GHSA-cjq9-62q9-8jv4), and cache poisoning
+  in SSG/ISR (GHSA-4jqv-mc3x-m676, GHSA-mcj8-r9mp-w47p).
+- `sharp` 0.35.4 → 0.35.5 (GHSA-wq5f-xc86-pv6w, librsvg dependency), via `next`'s image pipeline.
+- `source-map-js` 1.2.1 → 1.2.2 (GHSA-68fv-2mgg-jv7q, event-loop DoS), via `postcss` and Tailwind.
+- `npm audit --omit=dev` reports zero vulnerabilities for the production dependency tree.
+
+### Changed
+- `eslint-config-next` 16.3.5 → 16.4.0, to match `next`.
+- `@react-three/fiber` 9.7.0 → 9.8.1 (peers `react` `>=19 <19.4`; `react` stays on `~19.2.8`).
+- `three` 0.186.0 → 0.186.1.
+- `@types/node` 26.6.2 → 26.6.4.
+
+### Known
+- `braces` ≤3.0.3 (GHSA-vfj7-8cjw-p6xm, stack-exhaustion DoS on deeply nested patterns) has no
+  patched release on npm. It is reached only through `eslint-config-next` → `fast-glob` →
+  `micromatch` → `braces`, which is lint tooling and never ships to the site. Accepted; see
+  `DECISIONS.md`.
+
 ## [1.1.3] — 2026-09-21
 
 Dependency maintenance. Stops Dependabot from re-proposing the two bumps that are still
