@@ -53,4 +53,4 @@ updates + security alerts; React 19.3+ and TypeScript 7+ ignored until upstream 
 See `SECURITY.md` for the reporting policy and scope.
 
 ---
-_Last updated: 2026-09-21 · reflects v1.1.3_
+_Last updated: 2026-10-12 · reflects v1.1.4_
