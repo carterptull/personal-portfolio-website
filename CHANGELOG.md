@@ -25,6 +25,7 @@ PRs (#40–#43) as one reviewed change instead of four separate merges.
 - `@react-three/fiber` 9.7.0 → 9.8.1 (peers `react` `>=19 <19.4`; `react` stays on `~19.2.8`).
 - `three` 0.186.0 → 0.186.1.
 - `@types/node` 26.6.2 → 26.6.4.
+- `postcss` 8.5.28 → 8.5.29 (routine patch, no advisory).
 
 ### Known
 - `braces` ≤3.0.3 (GHSA-vfj7-8cjw-p6xm, stack-exhaustion DoS on deeply nested patterns) has no
