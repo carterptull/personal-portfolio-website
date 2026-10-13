@@ -121,7 +121,7 @@ function StartMenu({
           </a>
         ))}
         <hr className="my-1 border-t border-chrome-dark" aria-hidden="true" />
-        <p className="font-pixel px-2 py-1 text-[10px] text-neutral-600">
+        <p className="font-pixel px-2 py-1 text-[10px] text-neutral-700">
           v{SITE_VERSION}, {COPYRIGHT}
         </p>
       </div>

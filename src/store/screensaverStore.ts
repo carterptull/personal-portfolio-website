@@ -2,7 +2,6 @@
 
 import { create } from "zustand";
 import type { ComponentType } from "react";
-import type { SaverProps } from "@/components/screensaver/PipesScreensaver";
 
 type LaunchOptions = {
   /** A deliberate click/keypress rather than the idle timer firing. */
@@ -14,18 +13,19 @@ type ScreensaverStore = {
   /** Launch requested, three/R3F chunk still downloading. */
   pending: boolean;
   /**
-   * Timestamp before which an incidental `pointermove` must not dismiss.
-   * Only ever in the future for a manual launch — the idle path stays
-   * instant-dismiss-on-any-activity.
+   * Timestamp before which pointer-origin events (see `inLaunchGrace`) must
+   * not dismiss. Only ever in the future for a manual launch — the idle path
+   * stays instant-dismiss-on-any-activity.
    */
   pointerGraceUntil: number;
-  Saver: ComponentType<SaverProps> | null;
+  Saver: ComponentType | null;
   launch: (options?: LaunchOptions) => void;
   exit: () => void;
 };
 
 // A manual launch happens with the hand still on the mouse over the icon, so
-// the first stray drift must not close what the click just opened.
+// neither a stray drift nor a double-click's second press may close what the
+// click just opened.
 const POINTER_GRACE_MS = 800;
 
 let webglSupport: boolean | null = null;

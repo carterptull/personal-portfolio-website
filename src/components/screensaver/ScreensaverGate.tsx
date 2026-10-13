@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { inLaunchGrace } from "@/lib/screensaverGrace";
 import { useScreensaverStore } from "@/store/screensaverStore";
 
 const IDLE_MS = 60_000;
@@ -63,7 +64,7 @@ export function ScreensaverGate() {
     if (!active && !pending) return;
 
     const dismiss = (e: Event) => {
-      if (e.type === "pointermove" && Date.now() < pointerGraceUntil) return;
+      if (inLaunchGrace(e.type, Date.now(), pointerGraceUntil)) return;
       exit();
     };
 
@@ -86,5 +87,5 @@ export function ScreensaverGate() {
 
   if (!active || !Saver) return null;
   // eslint-disable-next-line react-hooks/static-components
-  return <Saver onExit={exit} />;
+  return <Saver />;
 }
