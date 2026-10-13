@@ -6,7 +6,7 @@ follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
-## [1.1.5] — 2026-10-12
+## [1.1.5] — 2026-10-13
 
 Bug-fix and warning cleanup release. Everything here was found by exercising 1.1.4 in a real
 browser and reading CI output rather than trusting a passing build.
