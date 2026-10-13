@@ -88,7 +88,7 @@ export function MobileShell({
       >
         <StartButton />
         <span
-          className="font-pixel ml-auto text-[10px] text-neutral-600"
+          className="font-pixel ml-auto text-[10px] text-neutral-700"
           title={COPYRIGHT}
         >
           v{SITE_VERSION}

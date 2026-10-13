@@ -71,9 +71,15 @@ union makes the two shapes mutually exclusive at the type level.
 (attached whenever the screensaver is active or its chunk is loading). **Why:** `launch()`
 deliberately bypasses those preferences for a manual click, so gating the exit listeners on them
 too left reduced-motion users in a full-screen trap that only a reload could clear. A manual
-launch also gets an 800 ms grace in which an incidental `pointermove` is ignored — the hand is
-still on the mouse over the icon — while deliberate input (`pointerdown`/`keydown`/`wheel`/
-`touchstart`) exits instantly, and the idle path keeps its instant-dismiss-on-anything behaviour.
+launch also gets an 800 ms grace in which pointer-origin events (`pointermove`, `pointerdown`,
+`touchstart`) are ignored — the hand is still on the mouse over the icon, and a double-click's
+second press arrives ~10 ms after a cached saver mounts. Keyboard and wheel input still exit
+instantly, and the idle path keeps its instant-dismiss-on-anything behaviour. **Found in
+1.1.5:** the grace originally covered only `pointermove`, and the overlay carried its own
+`onPointerDown={onExit}` that bypassed it, so double-clicking the icon dismissed the saver on
+every launch after the first (the first launch hid it behind the chunk download). The overlay
+handler is gone; the gate's window listener is the single dismissal path, and the grace rule is
+a pure function (`src/lib/screensaverGrace.ts`) with unit tests.
 
 ## CRT effect in CSS/SVG, not WebGL
 Scanlines/vignette via `repeating-linear-gradient` with a taskbar toggle. **Why:** ~0 KB,
@@ -101,12 +107,18 @@ decision; one source of truth prevents drift.
 `@vercel/analytics` + Speed Insights render only when deployed on Vercel. **Why:** local-first
 build; avoids dev-console noise and pointless requests. Cookieless, so no consent banner.
 
-## three pinned to ~0.182
-`@react-three/fiber` (9.6.1) still instantiates `THREE.Clock` internally, which three r183
-deprecated in favor of `THREE.Timer` — every screensaver mount logged a deprecation warning.
-**Why:** pinning three to the last pre-deprecation release silences it without touching R3F
-internals. Unpin once R3F migrates to Timer. **Alternative:** stay on 0.185 and accept the
-console warning — rejected; a visible warning on a portfolio is a bad look.
+## three's `Clock` deprecation warning: filtered at the source, three stays current
+`@react-three/fiber` (9.8.1, the latest stable) still does `new THREE.Clock()` internally, which
+three r183 deprecated in favor of `THREE.Timer`, so every screensaver mount logged
+`THREE.Clock: This module has been deprecated`. The old fix was to pin three to ~0.182, but the
+pin was lifted in 1.1.2 (three is now ~0.186) and this entry went stale — the warning was back
+and nobody noticed. **Now:** `PipesScreensaver` registers three's own `setConsoleFunction` hook
+at module load and drops exactly that one warning (`src/lib/threeConsole.ts`, unit-tested);
+every other three message is forwarded to `console` unchanged. **Why:** pinning three to 0.182
+trades away four minors of fixes and fights Dependabot's `three` group, for a message that is
+upstream's to fix and that nothing here triggers. **Alternative rejected:** a blanket
+`console.warn` filter — would also hide real warnings. **To revisit:** delete the filter when a
+stable fiber release stops constructing `Clock` (fiber 10 is alpha only).
 
 ## npm override: postcss under next
 Next originally bundled postcss 8.4.31 (GHSA-qx2v-qp2m-jg93, moderate XSS in stringify output);
@@ -127,7 +139,47 @@ i.e. lint tooling that runs on this repo's own files. `npm audit --omit=dev` is 
 vulnerable ships to the site. **Alternatives rejected:** `npm audit fix --force` proposes
 downgrading `eslint-config-next` to 14.2.35, which would break lint on Next 16; a `braces`
 override has no safe target. **To revisit:** when `micromatch` or `fast-glob` drops `braces`,
-or a patched `braces` is published.
+or a patched `braces` is published. Re-checked 2026-10-12: still 3.0.3, still no fix.
+
+## ESLint stays on 9 even though 9.x is deprecated
+`npm ci` prints `deprecated eslint@9.39.5: This version is no longer supported` — ESLint 9 is in
+maintenance and 10.x is current. Evaluated 2026-10-12 in an isolated worktree: ESLint 10.12 installs
+without `--legacy-peer-deps`, lints the repo clean, and reports the same findings as 9.39 on a file
+seeded with next / jsx-a11y / typescript-eslint / react-hooks violations. **Why not adopt it
+anyway:** `eslint-plugin-react`, `eslint-plugin-import`, and `eslint-plugin-jsx-a11y` (all bundled
+by `eslint-config-next`) declare `eslint` peers capped at ^9, so `npm ls` reports them `invalid`
+and npm resolves with "overriding peer dependency" warnings. A parity check on a sample isn't the
+same as the plugins' authors declaring support, and this repo's rule (see the React/TypeScript
+entry below) is to treat a peer range as a real compatibility statement. The cost of waiting is a
+cosmetic warning on a dev-only tool. `.github/dependabot.yml` ignores `eslint` majors so Dependabot
+doesn't propose it. **To lift:** when `eslint-config-next` ships plugins whose peers include 10,
+delete the ignore entry and bump (`npm view eslint-plugin-react peerDependencies`).
+
+## Third-party install scripts denied by default (`allowScripts`)
+Recent npm warns on every install about packages with lifecycle scripts "not yet covered by
+`allowScripts`" — in this tree only `unrs-resolver` (a lint-resolver dependency of
+`eslint-config-next`) qualifies. It's denied (`"allowScripts": {"unrs-resolver": false}`)
+rather than approved. **Why:** its postinstall only verifies/fetches a native binding, and the
+per-platform binding already arrives as an optional dependency, so the script does nothing this
+repo needs; denying matches the posture in `SECURITY.md` (CI runs `npm ci`, which executes
+dependency scripts). Verified with a clean `npm ci`, lint, tests, and build. **To revisit:** if a
+future platform or CI runner fails to resolve the binding, approve it
+(`npm install-scripts approve unrs-resolver`) instead.
+
+## Unit tests with `node --test`, no framework
+The repo had no test runner, so "tests pass" meant lint + build + a manual browser check — which is
+how the double-click relaunch bug shipped. `npm test` now runs `node --test "src/**/*.test.ts"`
+(Node 24 strips types natively), and CI runs it between lint and build. **Why no Vitest/Jest:**
+the logic worth testing is small and pure (`screensaverGrace`, `threeConsole`), so a new
+dependency tree, config file, and CVE surface would cost more than the tests protect.
+`allowImportingTsExtensions` is enabled in `tsconfig.json` (valid because `noEmit` is on) so the
+tests can import `./x.ts` the way Node's ESM loader requires. The script passes
+`--disable-warning=MODULE_TYPELESS_PACKAGE_JSON`: `package.json` has no `"type"`, so Node
+reparses each ESM-syntax `.ts` file and warns once per test process. Setting `"type": "module"`
+repo-wide would fix it at the root but changes how every config file (`next.config.ts`,
+PostCSS, ESLint) is loaded — too wide a blast radius for a cosmetic test-runner warning.
+**Alternative:** a DOM-level test of
+`ScreensaverGate` — needs a browser or jsdom; deferred until there is more UI logic to cover.
 
 ## Resume as a desktop app, not a route
 Word-style desktop icon opens a window with the PDF in an `<object>` viewer plus
@@ -154,7 +206,7 @@ properties and reference them in the animated `transform` — works, but needs `
 registration for smooth interpolation and is more machinery for the same result.
 
 ## CI: one lint-and-build job, not a matrix
-`.github/workflows/ci.yml` runs `npm run lint` + `npm run build` on a single `ubuntu-latest` /
+`.github/workflows/ci.yml` runs `npm run lint`, `npm test`, and `npm run build` on a single `ubuntu-latest` /
 Node 24 job. **Why:** this is a single-target Next.js site deployed to one place, not a
 published package other people's tooling needs to run on — there's no cross-OS/cross-Node
 consumer to protect against, unlike `ampline-claude`'s npm-package matrix (3 OS × 3 Node).
@@ -273,6 +325,13 @@ same registry publish breaks it again. `react`/`react-dom` are pinned with `~19.
 tilde holds the minor fixed, so npm can still take 19.2.x patches but not 19.3.0 — until fiber
 ships a release whose peer range covers it.
 
+**Lifted for React on 2026-10-12 (1.1.5):** `@react-three/fiber@9.8.1` widened its peer to
+`>=19 <19.4`, so `react`/`react-dom` moved to `~19.3.0` (and `@types/react*` to `^19.3.0`). The
+tilde stays — it now holds the minor below fiber's new ceiling, the same trap one version up.
+Verified before adopting: clean `npm install` with no peer overrides, lint/tests/build pass,
+and the desktop, Start menu, windows, resume PDF viewer, and 3D Pipes all work in Chrome. The
+`typescript` ceiling below is unchanged.
+
 The same shape of bug exists one dependency deeper for `typescript`: `eslint-config-next`
 bundles `typescript-eslint`, whose parser packages cap `typescript` at `"<6.1.0"`. That blocked
 Dependabot's `typescript` 6→7 bump the same way `fiber` blocked React. `typescript` stays on
@@ -284,11 +343,13 @@ locally besides waiting and re-attempting the bump once fiber/typescript-eslint 
 `main`, but Dependabot kept opening PRs for the blocked versions — it even rewrote `~19.2.8` to
 `~19.3.0` — and each one failed CI and produced a failed Vercel preview and a failure email
 (#37 and #38, a week after this fix). The ignore rules cover `react`/`react-dom`/`@types/react`/
-`@types/react-dom` at `>=19.3.0` and `typescript` major bumps. The rules only govern
-routine version-update PRs, not repo-level security alerts. **To lift:** when `@react-three/fiber` widens its `react` peer and `typescript-eslint` widens
-`typescript`, delete the matching `ignore` entries, relax the `~`/`^` pins, and let Dependabot
-open the bump. Check with `npm view @react-three/fiber peerDependencies` and
-`npm view typescript-eslint peerDependencies`.
+`@types/react-dom` at `>=19.4.0` (was `>=19.3.0` until fiber 9.8.1), `typescript` major bumps,
+and `eslint` major bumps. The rules only govern routine version-update PRs, not repo-level
+security alerts. **To lift:** when `@react-three/fiber` widens its `react` peer,
+`typescript-eslint` widens `typescript`, or `eslint-config-next`'s plugins widen `eslint`, delete
+the matching `ignore` entry, relax the `~`/`^` pin, and let Dependabot open the bump. Check with
+`npm view @react-three/fiber peerDependencies`, `npm view typescript-eslint peerDependencies`,
+and `npm view eslint-plugin-react peerDependencies`.
 
 **Why not `--legacy-peer-deps` or an `overrides` force instead:** that silences npm's warning
 but doesn't change what `@react-three/fiber` actually does at runtime with a React version its

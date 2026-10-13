@@ -67,7 +67,7 @@ export function Taskbar({
       </div>
 
       <span
-        className="font-pixel hidden px-1.5 text-[10px] text-neutral-600 sm:inline"
+        className="font-pixel hidden px-1.5 text-[10px] text-neutral-700 sm:inline"
         title={`Created by Carter Tull, ${COPYRIGHT}`}
       >
         v{SITE_VERSION}

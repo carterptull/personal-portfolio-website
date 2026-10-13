@@ -3,6 +3,14 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame } from "@react-three/fiber";
+import { isKnownFiberClockWarning } from "@/lib/threeConsole";
+
+// Module scope: runs once when this async chunk loads, before Canvas mounts.
+// Everything else three logs is forwarded untouched.
+THREE.setConsoleFunction((type, message, ...params) => {
+  if (isKnownFiberClockWarning(type, message)) return;
+  console[type](message, ...params);
+});
 
 const GRID = { x: 11, y: 7, z: 11 };
 const STEP_MS = 80;
@@ -148,15 +156,11 @@ function PipesScene() {
   return <group ref={group} />;
 }
 
-export type SaverProps = { onExit: () => void };
-
-export default function PipesScreensaver({ onExit }: SaverProps) {
+// Dismissal lives in ScreensaverGate (one window-level listener, grace-aware);
+// a pointerdown handler here would bypass the launch grace.
+export default function PipesScreensaver() {
   return (
-    <div
-      className="fixed inset-0 z-[9800] bg-void"
-      aria-hidden="true"
-      onPointerDown={onExit}
-    >
+    <div className="fixed inset-0 z-[9800] bg-void" aria-hidden="true">
       <Canvas
         dpr={[1, 1.5]}
         camera={{ position: [11, 8, 11], fov: 50 }}

@@ -10,6 +10,7 @@ npm run dev      # dev server (http://localhost:3000)
 npm run build    # production build (Turbopack)
 npm run start    # serve the production build
 npm run lint     # eslint
+npm test         # node --test over src/**/*.test.ts (no framework)
 ```
 
 `NEXT_PUBLIC_SITE_URL` sets the canonical URL (falls back to `http://localhost:3000`);
@@ -50,7 +51,11 @@ Key modules:
   `AppDef.launch` that `openApp` delegates to) via dynamic import; disposes on input. Idle
   *arming* is skipped for reduced-motion / no WebGL / Save-Data; *dismissal* never is, since a
   manual launch deliberately bypasses those preferences. `three` must stay in its own async
-  chunk — never import it from eagerly-loaded modules.
+  chunk — never import it from eagerly-loaded modules. The gate's window listener is the only
+  dismissal path (no `onPointerDown` on the overlay — it would bypass the launch grace), and a
+  manual launch ignores pointer-origin events for 800 ms (`src/lib/screensaverGrace.ts`) so a
+  double-click's second press can't close it. `src/lib/threeConsole.ts` drops fiber's one known
+  `THREE.Clock` deprecation warning; everything else three logs still reaches the console.
 - `src/content/*.ts` — all copy/data (profile, projects, skills, videos). Edit content here,
   not in components.
 - `src/lib/site.ts` — site URL/name/contact constants. `SITE_URL` resolves
@@ -81,9 +86,11 @@ Key modules:
   silently stop working.
 - Touch-target bumps go on the `pointer-coarse:` variant, so desktop keeps Win95 proportions.
 - Keep comments minimal; only explain what the code can't say itself.
-- `react`/`react-dom` stay on `~19.2.x` and `typescript` on `^6` until `@react-three/fiber` and
-  `typescript-eslint` widen their peer ranges. Don't bump them or use `--legacy-peer-deps`;
-  `.github/dependabot.yml` ignores those versions. Rationale in `DECISIONS.md`.
+- Upstream peer ceilings pin three packages; don't bump them or use `--legacy-peer-deps`.
+  `react`/`react-dom` stay on `~19.3.x` (tilde — `@react-three/fiber` peers `<19.4`),
+  `typescript` on `^6` (until `typescript-eslint` widens `<6.1.0`), and `eslint` on `^9` (until
+  `eslint-config-next`'s react/import/jsx-a11y plugins widen their `<=9` peers).
+  `.github/dependabot.yml` ignores the blocked versions. Rationale in `DECISIONS.md`.
 
 ## Adding a project later
 

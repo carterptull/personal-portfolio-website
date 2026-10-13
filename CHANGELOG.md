@@ -6,6 +6,56 @@ follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.1.5] — 2026-10-13
+
+Bug-fix and warning cleanup release. Everything here was found by exercising 1.1.4 in a real
+browser and reading CI output rather than trusting a passing build.
+
+### Fixed
+- **3D Pipes dismissed itself on a double-click after the first launch.** The 800 ms launch
+  grace covered only `pointermove`, so a double-click's second `pointerdown` — landing ~10 ms
+  after a cached saver mounted — closed it before a frame drew, and the overlay's own
+  `onPointerDown` handler bypassed the grace entirely. The first launch of a page hid this
+  behind the chunk download. Dismissal now has a single path (the gate's window listener), and
+  `pointermove`/`pointerdown`/`touchstart` are ignored for 800 ms after a manual launch;
+  keyboard and wheel still exit instantly.
+- **`THREE.Clock` deprecation warning on every screensaver mount.** `@react-three/fiber` 9.8.1
+  (latest stable) still constructs `THREE.Clock`. The warning is filtered with three's
+  `setConsoleFunction` hook, matching only that message — everything else three logs is
+  forwarded. The `DECISIONS.md` entry that claimed a `~0.182` pin handled this had been stale
+  since 1.1.2.
+- **Low-contrast version label** (`#525252` on `#c0c0c0`, 4.29:1 against the 4.5:1 AA minimum)
+  in the taskbar, Start menu, and mobile bottom bar → `text-neutral-700` (5.70:1). It was the one
+  failing Lighthouse accessibility audit on every route.
+
+### Added
+- `npm test` — `node --test` over `src/**/*.test.ts`, no new dependencies. Seven unit tests
+  cover the launch-grace rule and the warning filter, and CI now runs them between lint and
+  build.
+
+### Changed
+- `react`/`react-dom` 19.2.8 → 19.3.0 and `@types/react`/`@types/react-dom` → 19.3.0.
+  `@react-three/fiber` 9.8.1 widened its peer to `<19.4`, which was the only thing holding React
+  back. Pins stay tilde (`~19.3.0`) so 19.4 can't slip past fiber's new ceiling.
+- `.github/dependabot.yml`: React family ignored at `>=19.4.0` (was `>=19.3.0`); `eslint` major
+  bumps ignored (see below).
+- `package.json` `allowScripts` denies `unrs-resolver`'s postinstall. npm began warning about
+  unreviewed install scripts in CI; the package ships prebuilt per-platform bindings as optional
+  dependencies, so the script isn't needed. Verified with a clean `npm ci`, lint, tests, and
+  build.
+- Docs: `CLAUDE.md`, `DECISIONS.md`, `SECURITY.md`, `README.md`, and the deployment diagram
+  updated for the above.
+
+### Known
+- **`eslint@9.39.5` is flagged deprecated** (`npm ci` prints a warning in CI). ESLint 10 was
+  trialled in an isolated worktree and lints the repo identically, but `eslint-plugin-react`,
+  `-import`, and `-jsx-a11y` (bundled by `eslint-config-next`) still declare `eslint` peers
+  capped at ^9, so `npm ls` reports them invalid. Held back until they widen; see `DECISIONS.md`.
+- **`braces` ≤3.0.3** (dev-only, no patched release) — re-checked, unchanged from 1.1.4.
+- Chrome DevTools reports "Lazy-loaded images should have explicit dimensions" for
+  `brand-mark.svg` in dev mode. The element carries `width`/`height` in server HTML and measured
+  CLS is 0.0001 (budget 0.1), so this is a heuristic false positive.
+
 ## [1.1.4] — 2026-10-12
 
 Security maintenance. Clears every open Dependabot alert and folds in the four open Dependabot

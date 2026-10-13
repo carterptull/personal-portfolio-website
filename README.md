@@ -20,6 +20,7 @@ on top of a fully server-rendered, crawlable content layer.
 ```bash
 npm install
 npm run dev        # http://localhost:3000
+npm test           # unit tests (node --test)
 ```
 
 Production build:
