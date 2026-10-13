@@ -155,6 +155,17 @@ cosmetic warning on a dev-only tool. `.github/dependabot.yml` ignores `eslint` m
 doesn't propose it. **To lift:** when `eslint-config-next` ships plugins whose peers include 10,
 delete the ignore entry and bump (`npm view eslint-plugin-react peerDependencies`).
 
+## Third-party install scripts denied by default (`allowScripts`)
+Recent npm warns on every install about packages with lifecycle scripts "not yet covered by
+`allowScripts`" — in this tree only `unrs-resolver` (a lint-resolver dependency of
+`eslint-config-next`) qualifies. It's denied (`"allowScripts": {"unrs-resolver": false}`)
+rather than approved. **Why:** its postinstall only verifies/fetches a native binding, and the
+per-platform binding already arrives as an optional dependency, so the script does nothing this
+repo needs; denying matches the posture in `SECURITY.md` (CI runs `npm ci`, which executes
+dependency scripts). Verified with a clean `npm ci`, lint, tests, and build. **To revisit:** if a
+future platform or CI runner fails to resolve the binding, approve it
+(`npm install-scripts approve unrs-resolver`) instead.
+
 ## Unit tests with `node --test`, no framework
 The repo had no test runner, so "tests pass" meant lint + build + a manual browser check — which is
 how the double-click relaunch bug shipped. `npm test` now runs `node --test "src/**/*.test.ts"`

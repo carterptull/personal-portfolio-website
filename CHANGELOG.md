@@ -39,6 +39,10 @@ browser and reading CI output rather than trusting a passing build.
   back. Pins stay tilde (`~19.3.0`) so 19.4 can't slip past fiber's new ceiling.
 - `.github/dependabot.yml`: React family ignored at `>=19.4.0` (was `>=19.3.0`); `eslint` major
   bumps ignored (see below).
+- `package.json` `allowScripts` denies `unrs-resolver`'s postinstall. npm began warning about
+  unreviewed install scripts in CI; the package ships prebuilt per-platform bindings as optional
+  dependencies, so the script isn't needed. Verified with a clean `npm ci`, lint, tests, and
+  build.
 - Docs: `CLAUDE.md`, `DECISIONS.md`, `SECURITY.md`, `README.md`, and the deployment diagram
   updated for the above.
 
