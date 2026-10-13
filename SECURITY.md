@@ -53,11 +53,13 @@ through Vercel and where the CSP's exceptions below come from.
   surface is compile-time constants only, and `frame-ancestors 'none'` closes the realistic
   (clickjacking) threat. Revisit if the site ever gains a dynamic route or a form.
 - **Dependencies:** Dependabot alerts, automated security updates, and grouped weekly version
-  updates (`.github/dependabot.yml`) are enabled. The config ignores `react` 19.3+ and
-  `typescript` 7+ because upstream peer ranges (`@react-three/fiber`, `typescript-eslint`)
-  don't support them yet — see `DECISIONS.md`.
+  updates (`.github/dependabot.yml`) are enabled. The config ignores `react` 19.4+,
+  `typescript` 7+, and `eslint` 10+ because upstream peer ranges (`@react-three/fiber`,
+  `typescript-eslint`, `eslint-config-next`'s plugins) don't support them yet — see
+  `DECISIONS.md`. `npm audit --omit=dev` is the production signal; the remaining dev-only
+  advisory (`braces`, no patched release) is documented there too.
 - **Secrets:** none in source. The only environment variable, `NEXT_PUBLIC_SITE_URL`, is a public
   value by design. Secret scanning with push protection is enabled on the repository.
-- **CI:** every push and pull request to `main` must pass lint and build; the workflow runs with
+- **CI:** every push and pull request to `main` must pass lint, tests, and build; the workflow runs with
   a read-only `GITHUB_TOKEN` and consumes no secrets. `main` is protected — changes go through a
   pull request, force-pushes and deletions are blocked, and the rules apply to admins.
