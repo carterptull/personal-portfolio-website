@@ -12,9 +12,9 @@ const csp = [
   "font-src 'self'",
   "connect-src 'self' https://va.vercel-scripts.com",
   // 'self': the resume PDF <object> renders through Chrome's internal viewer frame.
-  // blitzcast.app: the Blitzcast window embeds the live app via <iframe>; its own
-  // response headers scope frame-ancestors back to this site — see DECISIONS.md.
-  "frame-src 'self' https://www.youtube-nocookie.com https://www.blitzcast.app",
+  // blitzcast.app, ampline.js.org: the Blitzcast and Ampline windows embed the live apps via
+  // <iframe>; their own response headers scope frame-ancestors back to this site — see DECISIONS.md.
+  "frame-src 'self' https://www.youtube-nocookie.com https://www.blitzcast.app https://ampline.js.org",
   "object-src 'self'",
   "base-uri 'none'",
   "form-action 'none'",
