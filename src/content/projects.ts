@@ -8,7 +8,7 @@ export type Project = {
   problem: string;
   approach: string[];
   outcome: string;
-  links: { repo?: string; live?: string; npm?: string };
+  links: { repo?: string; siteRepo?: string; live?: string; npm?: string };
   status: string;
 };
 
@@ -33,12 +33,14 @@ export const projects: Project[] = [
       "Kept the package at zero runtime dependencies.",
     ],
     outcome:
-      "Published to npm and in active development. Most of the work went into the constraints around it, like the latency budget, the cold-start cache, and making sure a bad install couldn't wipe out someone's existing config.",
+      "Published to npm, with a live site at ampline.js.org whose playground runs the real renderer in the browser. Most of the work went into the constraints around it, like the latency budget, the cold-start cache, and making sure a bad install couldn't wipe out someone's existing config.",
     links: {
       repo: "https://github.com/carterptull/ampline-claude",
+      siteRepo: "https://github.com/carterptull/ampline-website",
       npm: "https://www.npmjs.com/package/ampline-claude",
+      live: "https://ampline.js.org/",
     },
-    status: "Published on npm, actively developed",
+    status: "Live at ampline.js.org, published on npm, actively developed",
   },
   {
     slug: "blitzcast",
