@@ -211,3 +211,25 @@ const footballPx: Px[] = [
 export const IconFootball = (p: { size?: number }) => (
   <PixelIcon px={footballPx} {...p} />
 );
+
+// Ampline's four-bar logo as a silhouette: chrome bars with the same raised
+// bevel as footballPx (light cap, dark right edge) on a dark baseline.
+const amplinePx: Px[] = [
+  [3, 9, 2, 5, C.chrome],
+  [6, 7, 2, 7, C.chrome],
+  [9, 4, 2, 10, C.chrome],
+  [12, 6, 2, 8, C.chrome],
+  [3, 9, 2, 1, C.light],
+  [6, 7, 2, 1, C.light],
+  [9, 4, 2, 1, C.light],
+  [12, 6, 2, 1, C.light],
+  [4, 10, 1, 4, C.dark],
+  [7, 8, 1, 6, C.dark],
+  [10, 5, 1, 9, C.dark],
+  [13, 7, 1, 7, C.dark],
+  [2, 14, 13, 1, C.dark],
+];
+
+export const IconAmpline = (p: { size?: number }) => (
+  <PixelIcon px={amplinePx} {...p} />
+);
