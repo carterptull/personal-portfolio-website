@@ -6,6 +6,43 @@ follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.2.0] — 2026-10-23
+
+Ampline gets the same treatment Blitzcast has: a desktop app that embeds its live site, ampline.js.org,
+in a window. Ampline is a color-graded statusline for Claude Code, and its site's playground
+runs the real renderer in the browser, so embedding it shows the product rather than a description
+of it. Also clears three published Next.js advisories.
+
+### Added
+- **Ampline desktop app** — an icon between Blitzcast and Resume on the desktop and a matching
+  Start menu row, opening a window (`AmplineContent`) that iframes `https://ampline.js.org/`, with
+  an "Open in new tab" escape hatch. Like Blitzcast it is desktop-only: no SSR route, never
+  crawled; the Ampline project page remains the crawlable content. The iframe sets
+  `allow="clipboard-write"` so the site's Copy buttons work inside the frame.
+- `IconAmpline` — the logo's four-bar silhouette (heights 5/7/10/8) as a gray bevelled pixel icon
+  using the existing icon palette.
+- **Project page links** — a "Website source on GitHub" footer link (new optional `links.siteRepo`)
+  and a live link to ampline.js.org on the Ampline project page.
+- Tests: `src/lib/csp.test.ts` pins `frame-src` and `frame-ancestors`; `src/content/projects.test.ts`
+  covers the Ampline project's links.
+
+### Changed
+- Ampline project copy: the outcome and status now reflect the live site rather than "in active
+  development".
+- CSP `frame-src` adds `https://ampline.js.org` (alongside `'self'`, YouTube, and Blitzcast).
+  `frame-ancestors` is unchanged at `'self'`.
+- Companion change, in the ampline-website repo (0.3.1): ampline.js.org's own `frame-ancestors`
+  moved from `'none'` to `https://cartertull.com https://www.cartertull.com`. Without it the
+  embed renders blank.
+- Docs: `CLAUDE.md`, `DECISIONS.md`, `SECURITY.md` (its stale `frame-ancestors 'none'` sentence now
+  says `'self'`), and the context and deployment diagrams updated for the above.
+
+### Security
+- `next` and `eslint-config-next` 16.4.0 → 16.4.3, clearing three published Next.js advisories:
+  GHSA-2464-fhr4-w9xw (critical, remote code execution via Image Optimization with SVG),
+  GHSA-p3m5-59mp-jv5r (denial of service in Server Actions), and GHSA-673q-mjm6-r5xr (remote
+  code execution via `use cache` typed arrays).
+
 ## [1.1.5] — 2026-10-13
 
 Bug-fix and warning cleanup release. Everything here was found by exercising 1.1.4 in a real

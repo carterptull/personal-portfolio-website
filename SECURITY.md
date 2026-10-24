@@ -50,8 +50,10 @@ through Vercel and where the CSP's exceptions below come from.
 - **Known CSP trade-off:** `script-src` includes `'unsafe-inline'`. A nonce-based policy requires
   per-request rendering, which would defeat the fully-static delivery this site's performance
   budget depends on. With no user input, auth, or persistence anywhere in the app, the injection
-  surface is compile-time constants only, and `frame-ancestors 'none'` closes the realistic
-  (clickjacking) threat. Revisit if the site ever gains a dynamic route or a form.
+  surface is compile-time constants only, and `frame-ancestors 'self'` closes the realistic
+  (clickjacking) threat by still refusing cross-origin framing. Outgoing embeds (blitzcast.app,
+  ampline.js.org) are governed separately by `frame-src`. Revisit if the site ever gains a dynamic
+  route or a form.
 - **Dependencies:** Dependabot alerts, automated security updates, and grouped weekly version
   updates (`.github/dependabot.yml`) are enabled. The config ignores `react` 19.4+,
   `typescript` 7+, and `eslint` 10+ because upstream peer ranges (`@react-three/fiber`,

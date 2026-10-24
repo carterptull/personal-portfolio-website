@@ -97,6 +97,10 @@ Key modules:
 Add an entry to `src/content/projects.ts` — routes, sitemap, OG image, desktop icon, and
 window all derive from it. No layout changes needed.
 
+An *embedded live app* (like Blitzcast/Ampline) additionally needs an `APPS` entry + `DESKTOP_APP_IDS`
+slot, a pixel icon in `icons.tsx`, a `frame-src` allowance in `next.config.ts`, and a
+`frame-ancestors` allowance on the target site.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 # This is NOT the Next.js you know

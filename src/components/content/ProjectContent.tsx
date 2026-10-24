@@ -47,7 +47,10 @@ export function ProjectContent({ project }: { project: Project }) {
 
       <footer className="bevel-thin-down bg-white p-2 text-sm text-neutral-700">
         <p>Status: {project.status}</p>
-        {(project.links.repo || project.links.npm || project.links.live) && (
+        {(project.links.repo ||
+          project.links.siteRepo ||
+          project.links.npm ||
+          project.links.live) && (
           <p className="flex flex-wrap gap-x-4">
             {project.links.repo && (
               <a
@@ -55,6 +58,14 @@ export function ProjectContent({ project }: { project: Project }) {
                 className="text-scarlet underline underline-offset-2"
               >
                 Source on GitHub
+              </a>
+            )}
+            {project.links.siteRepo && (
+              <a
+                href={project.links.siteRepo}
+                className="text-scarlet underline underline-offset-2"
+              >
+                Website source on GitHub
               </a>
             )}
             {project.links.npm && (

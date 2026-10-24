@@ -292,6 +292,25 @@ here, with an escape hatch to a new tab" pattern, and that's what was asked for.
 resume PDF, a blocked iframe here fails silent (blank, no fallback content), so both ends were
 verified against real production builds, not just read on paper.
 
+## Ampline follows the Blitzcast embed pattern
+
+The Ampline icon opens a window (`AmplineContent`) that iframes `https://ampline.js.org/`, wired
+exactly like Blitzcast: an `APPS` entry and a `DESKTOP_APP_IDS` slot, no `appIdForPath` mapping,
+no SSR route. The crawlable content is still the Ampline project page. **Why:** the same
+reasoning as above — ampline.js.org is a separate, live static site whose playground runs the real
+renderer in the browser, so mirroring it as `src/content/*` data would mean two copies of one
+product. **The one difference:** the iframe carries `allow="clipboard-write"` so the site's Copy
+buttons work inside the frame; cross-origin iframes don't get clipboard access unless the embedder
+delegates it. It grants write access only, requires a user gesture, and
+applies to that one iframe — it doesn't widen the portfolio's own `Permissions-Policy`.
+**Consequence:** `frame-src` adds `https://ampline.js.org`, and ampline-website 0.3.1's
+`vercel.json` `frame-ancestors` (previously `'none'`) lists both `https://cartertull.com` and
+`https://www.cartertull.com` — both origins, since the apex and `www` are separate origins to a
+framing check. The order matters: ampline.js.org's header is confirmed live before the portfolio
+change merges, then the embed is checked on cartertull.com after deploy — a blocked frame fails
+blank, with no fallback content.
+`src/lib/csp.test.ts` pins `frame-src` so a future edit can't drop or widen it unnoticed.
+
 ## Framing headers are `'self'`/`SAMEORIGIN`, not `'none'`/`DENY`
 **Why:** the header block applies to `/:path*`, which includes `/Carter-Tull-Resume.pdf`. Chrome
 renders a PDF `<object>` through an internal viewer frame, so `'none'`/`DENY` left the resume

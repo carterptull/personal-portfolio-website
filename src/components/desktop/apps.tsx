@@ -6,6 +6,7 @@ import { getProject, projects } from "@/content/projects";
 import { useScreensaverStore } from "@/store/screensaverStore";
 import { useWindowStore } from "@/store/windowStore";
 import {
+  IconAmpline,
   IconComputer,
   IconContact,
   IconDocument,
@@ -64,6 +65,11 @@ const BlitzcastContent = dynamic(
     ),
   { loading }
 );
+const AmplineContent = dynamic(
+  () =>
+    import("@/components/content/AmplineContent").then((m) => m.AmplineContent),
+  { loading }
+);
 
 // An app either opens a window (w/h/render) or takes over the screen itself
 // (launch) — never both. openApp() honours `launch` so the distinction can't be
@@ -84,6 +90,7 @@ export const DESKTOP_APP_IDS = [
   "skills",
   "screensaver",
   "blitzcast",
+  "ampline",
   "resume",
   "contact",
 ] as const;
@@ -132,6 +139,13 @@ const APPS: Record<string, AppDef> = {
     w: 720,
     h: 640,
     render: () => <BlitzcastContent />,
+  },
+  ampline: {
+    title: "Ampline",
+    Icon: IconAmpline,
+    w: 720,
+    h: 640,
+    render: () => <AmplineContent />,
   },
   resume: {
     title: "Resume",
