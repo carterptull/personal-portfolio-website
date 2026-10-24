@@ -303,10 +303,11 @@ product. **The one difference:** the iframe carries `allow="clipboard-write"` so
 buttons work inside the frame; cross-origin iframes don't get clipboard access unless the embedder
 delegates it. It grants write access only, requires a user gesture, and
 applies to that one iframe — it doesn't widen the portfolio's own `Permissions-Policy`.
-**Consequence:** `frame-src` adds `https://ampline.js.org`, and the ampline-website repo's
-`vercel.json` `frame-ancestors` (previously `'none'`) now lists both `https://cartertull.com` and
+**Consequence:** `frame-src` adds `https://ampline.js.org`, and ampline-website 0.3.1's
+`vercel.json` `frame-ancestors` (previously `'none'`) lists both `https://cartertull.com` and
 `https://www.cartertull.com` — both origins, since the apex and `www` are separate origins to a
-framing check. Verified against production, because a blocked frame fails blank.
+framing check. Both ends must be verified against production before merge, because a blocked
+frame fails blank.
 `src/lib/csp.test.ts` pins `frame-src` so a future edit can't drop or widen it unnoticed.
 
 ## Framing headers are `'self'`/`SAMEORIGIN`, not `'none'`/`DENY`

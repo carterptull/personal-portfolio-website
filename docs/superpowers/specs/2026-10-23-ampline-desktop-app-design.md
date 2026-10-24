@@ -80,9 +80,9 @@ template — follow it unless this document says otherwise.
 - Widening ampline.js.org's framing beyond cartertull.com/www.cartertull.com, or loosening any
   other directive on either site.
 - An icon with color fills, a new palette entry, or a flat `#E23A3A`.
-- The word "Paymon" anywhere in portfolio code/copy/assets (hard constraint). Note: the embedded
-  ampline.js.org footer shows "© 2026 Paymon Software", exactly as the embedded blitzcast.app
-  does today; that's the other site's content and is accepted precedent.
+- Naming the old brand anywhere in portfolio code/copy/assets (CLAUDE.md hard constraint). Note:
+  the embedded ampline.js.org footer shows another company's copyright line, exactly as the
+  embedded blitzcast.app does today; that's the other site's content and is accepted precedent.
 - Merging either PR before Carter has reviewed the work running locally in Chrome.
 
 ## Constraints

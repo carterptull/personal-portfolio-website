@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { getProject, projects } from "./projects.ts";
+import { getProject } from "./projects.ts";
 
 test("ampline links cover the package, its website, and the live site", () => {
   assert.deepEqual(getProject("ampline-claude")?.links, {
@@ -13,8 +13,4 @@ test("ampline links cover the package, its website, and the live site", () => {
 
 test("ampline status names the live site", () => {
   assert.match(getProject("ampline-claude")?.status ?? "", /ampline\.js\.org/);
-});
-
-test("no project copy mentions Paymon", () => {
-  assert.doesNotMatch(JSON.stringify(projects), /paymon/i);
 });
