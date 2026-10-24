@@ -7,7 +7,7 @@ the C4 container view.
 
 ```mermaid
 flowchart LR
-    subgraph server["Rendered on the server (every request)"]
+    subgraph server["Rendered on the server (prerendered at build time)"]
         direction TB
         page["src/app/about/page.tsx<br/>(and /projects, /contact, …)"]
         ssrWrap["src/components/ssr/*<br/><small>header/footer, static window-frame chrome</small>"]
@@ -26,11 +26,15 @@ flowchart LR
         db2["DesktopBoundary"]
         chrome2["DesktopChrome<br/><small>boot · icon grid · taskbar</small>"]
         fw["FloatingWindow<br/>(≥768px) or<br/>MobileShell (<768px)"]
+        windowOnly["Window-only apps<br/><small>BlitzcastContent · AmplineContent (cross-origin iframes),<br/>ResumeContent, MediaPlayerContent — no SSR route</small>"]
         db2 --> chrome2 --> fw
+        fw --> windowOnly
     end
 
     ssrWrap --> AboutContent
     ssrWrap --> ProjectContent
+    ssrWrap --> SkillsContent
+    ssrWrap --> ContactContent
     fw --> AboutContent
     fw --> ProjectContent
     fw --> SkillsContent
@@ -54,10 +58,15 @@ into server HTML. Separately, `apps.tsx`'s `about` entry in the app registry ren
 props shape, two call sites — nothing in `AboutContent` itself knows or cares which one is
 rendering it.
 
+**The window-only apps hold none of this site's own content:** Blitzcast and Ampline embed
+separate live products cross-origin, and each one's crawlable write-up is its `/projects/[slug]`
+page; Resume wraps a directly linkable PDF, and the Media Player plays YouTube videos. See
+"Blitzcast is a desktop-only app with no SSR route" in `DECISIONS.md`.
+
 **Enforcement, not just convention:** `DesktopBoundary` dynamically imports `DesktopChrome`
 with `ssr: false`, so the whole client layer (store, windows, taskbar) is structurally
 incapable of shipping content the server didn't already render — there's no code path where
 the desktop layer is the *first* place a visitor's content appears.
 
 ---
-_Last updated: 2026-09-14 · reflects v1.1.2_
+_Last updated: 2026-10-23 · reflects v1.2.1_

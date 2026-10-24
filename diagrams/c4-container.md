@@ -25,14 +25,15 @@ flowchart TB
 
         store[("Zustand stores<br/>windowStore · screensaverStore<br/><small>order/openOrder = z-order vs. taskbar order</small>")]
 
-        registry["App registry<br/>src/components/desktop/apps.tsx<br/><small>getAppDef · openApp/closeApp · route↔app mapping</small>"]
+        registry["App registry<br/>src/components/desktop/apps.tsx<br/><small>getAppDef · openApp/closeApp · route↔app mapping<br/>DESKTOP_APP_IDS feeds the icon grid and Start menu</small>"]
 
         dataFile[("Content data<br/>src/content/*.ts<br/><small>profile, projects, skills, videos</small>")]
 
-        screensaver["3D Pipes screensaver<br/><small>three/R3F — its own async chunk,<br/>idle-gated or manually launched</small>"]
+        screensaver["3D Pipes screensaver<br/>ScreensaverGate · PipesScreensaver<br/><small>three/R3F — its own async chunk,<br/>idle-gated or manually launched<br/>(800 ms pointer grace, src/lib/screensaverGrace.ts)</small>"]
     end
 
     vercel[["☁️ Vercel<br/>build + static hosting"]]
+    embeds[["🌐 Embedded sites<br/><small>youtube-nocookie.com · blitzcast.app · ampline.js.org<br/>cross-origin iframes, desktop windows only</small>"]]
 
     visitor -->|HTTPS| routes
     visitor -.->|"hydrates on top"| boundary
@@ -48,6 +49,9 @@ flowchart TB
     chrome --> registry
     registry --> windows
     registry -->|"AppDef.launch()"| screensaver
+    chrome --> screensaver
+    screensaver --> store
+    windows -.->|"iframes, on demand"| embeds
 
     app -->|"deployed to"| vercel
 
@@ -67,4 +71,4 @@ windows from icon clicks or route changes without those call sites being React c
 themselves — see the "Zustand for the window manager" entry in `DECISIONS.md`.
 
 ---
-_Last updated: 2026-09-14 · reflects v1.1.2_
+_Last updated: 2026-10-23 · reflects v1.2.1_

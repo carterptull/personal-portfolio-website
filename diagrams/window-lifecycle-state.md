@@ -11,12 +11,13 @@ stateDiagram-v2
     state Normal {
         [*] --> Idle
         Idle --> Moving : pointerdown on titlebar + setPointerCapture
-        Moving --> Idle : pointerup → commits x/y to store (once)
+        Moving --> Idle : pointerup / lostpointercapture → commits x/y to store (once)
         Idle --> Resizing : pointerdown on resize handle
-        Resizing --> Idle : pointerup → commits rect to store (once)
+        Resizing --> Idle : pointerup / lostpointercapture → commits rect to store (once)
     }
 
-    Normal --> Minimized : minimizeApp(id)
+    Normal --> Minimized : minimizeApp(id), or its active taskbar button
+    Maximized --> Minimized : minimizeApp(id), or its active taskbar button
     Minimized --> Normal : openApp(id) again → restores + focuses
 
     Normal --> Maximized : toggleMax(id), saves rect to prevRect
@@ -37,9 +38,11 @@ stateDiagram-v2
 ```
 
 **Focus is orthogonal to this diagram, not a state of the window itself:** `focusedId` and
-`order` (z-order, back-to-front) live at the store level and change on `focus()` — clicking
-any visible window, opening one, or `toggleMax()`-ing one all call it. A minimized window can
-never be focused (`topVisible()` skips it when picking the next `focusedId` on close/minimize).
+`order` (z-order, back-to-front) live at the store level and change on `focus()` (clicking
+any visible window); `open()` and `toggleMax()` apply the same reorder themselves. A minimized
+window can never be focused (`topVisible()` skips it when picking the next `focusedId` on
+close/minimize), and restoring one always lands in `Normal`, even if it was minimized from
+`Maximized`.
 
 **Two orderings, deliberately not one:** `order` reshuffles on every focus (it's z-index);
 `openOrder` is append-only and only changes on open/close, so taskbar buttons stay in
@@ -52,4 +55,4 @@ to know about — see `src/components/desktop/FloatingWindow.tsx` and the "Hand-
 Events drag/resize" entry in `DECISIONS.md`.
 
 ---
-_Last updated: 2026-09-14 · reflects v1.1.2_
+_Last updated: 2026-10-23 · reflects v1.2.1_
