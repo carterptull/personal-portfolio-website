@@ -32,6 +32,15 @@ flowchart TB
 | `object-src 'self'` | Needed for that same `<object>` PDF embed |
 | `frame-ancestors 'self'` (not `'none'`) | These headers ride on `/Carter-Tull-Resume.pdf` itself — `'none'` would forbid the resume window from framing its own PDF |
 
+## Embedded sibling apps: `frame-src` plus the target's `frame-ancestors`
+
+`frame-src` also names `https://www.blitzcast.app` and `https://ampline.js.org` (next to
+`'self'` and `https://www.youtube-nocookie.com`) — the Blitzcast and Ampline windows iframe those
+live sites. An embed needs both ends: this site's `frame-src`, and a `frame-ancestors` on the
+target listing this site's origins (ampline.js.org allows `https://cartertull.com` and
+`https://www.cartertull.com`). Either side missing renders a blank frame with no fallback, so
+verify both against production. `src/lib/csp.test.ts` pins this site's side.
+
 `script-src` also keeps `'unsafe-inline'` rather than a nonce: every one of the 31 routes
 prerenders to static HTML, and a nonce must be unique per response, which would force
 per-request rendering and trade away the site's entire static-delivery story (and the LCP
@@ -54,4 +63,4 @@ support them) and secret-scanning push protection are enabled at the repo level.
 See `SECURITY.md` for the reporting policy and scope.
 
 ---
-_Last updated: 2026-10-13 · reflects v1.1.5_
+_Last updated: 2026-10-23 · reflects v1.2.0_

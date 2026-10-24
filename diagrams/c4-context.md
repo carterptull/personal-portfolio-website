@@ -18,11 +18,13 @@ flowchart TB
     vercel[["☁️ Vercel<br/><small>Build, static hosting/CDN — the only deploy<br/>target. Supplies preview-vs-production URLs.</small>"]]
     youtube[["▶️ YouTube (nocookie)<br/><small>Iframe loads only on click —<br/>zero third-party bytes/cookies until then.</small>"]]
     blitzcast[["🏈 blitzcast.app<br/><small>Separate live Next.js app, embedded<br/>read-only via cross-origin iframe.</small>"]]
+    ampline[["📊 ampline.js.org<br/><small>Separate static site, embedded<br/>read-only via cross-origin iframe.</small>"]]
 
     visitor -->|"reads / clicks, HTTPS"| portfolio
     portfolio -->|"deployed to, served from"| vercel
     portfolio -->|"loads iframe on demand"| youtube
     portfolio -->|"embeds via iframe"| blitzcast
+    portfolio -->|"embeds via iframe"| ampline
 
     style boundary fill:transparent,stroke:#BB0000,stroke-width:2px,stroke-dasharray: 4 3
 ```
@@ -33,9 +35,10 @@ prerendered at build time from `src/content/*.ts`; the only runtime state is cli
 in-memory). See [`deployment-security.md`](deployment-security.md) for how that shrinks the
 attack surface, and `SECURITY.md` for the policy this maps to.
 
-**Why Blitzcast and YouTube are external systems, not features:** both are genuinely
-separate products this site links into, not data this site owns — see the "Blitzcast is a
-desktop-only app" and "YouTube via facade pattern" entries in `DECISIONS.md`.
+**Why Blitzcast, Ampline, and YouTube are external systems, not features:** all three are
+genuinely separate products this site links into, not data this site owns — see the "Blitzcast
+is a desktop-only app", "Ampline follows the Blitzcast embed pattern", and "YouTube via facade
+pattern" entries in `DECISIONS.md`.
 
 ---
-_Last updated: 2026-09-14 · reflects v1.1.2_
+_Last updated: 2026-10-23 · reflects v1.2.0_
