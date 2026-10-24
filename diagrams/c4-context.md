@@ -41,4 +41,4 @@ is a desktop-only app", "Ampline follows the Blitzcast embed pattern", and "YouT
 pattern" entries in `DECISIONS.md`.
 
 ---
-_Last updated: 2026-10-23 · reflects v1.2.0_
+_Last updated: 2026-10-23 · reflects v1.2.1_

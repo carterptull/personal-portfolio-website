@@ -58,7 +58,7 @@ into server HTML. Separately, `apps.tsx`'s `about` entry in the app registry ren
 props shape, two call sites — nothing in `AboutContent` itself knows or cares which one is
 rendering it.
 
-**The window-only apps hold none of this site's own content:** Blitzcast and Ampline embed
+**The window-only apps hold none of this site's crawlable page content:** Blitzcast and Ampline embed
 separate live products cross-origin, and each one's crawlable write-up is its `/projects/[slug]`
 page; Resume wraps a directly linkable PDF, and the Media Player plays YouTube videos. See
 "Blitzcast is a desktop-only app with no SSR route" in `DECISIONS.md`.

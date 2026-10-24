@@ -22,7 +22,7 @@ sequenceDiagram
     DB->>DC: mount DesktopChrome
     DC->>SS: read "booted" (reduced motion via matchMedia)
     DC->>DC: mount effect → document.body.classList.add("desktop-active")
-    Note over DC: .ssr-layer is now hidden via CSS —<br/>only once the desktop actually exists<br/>(same commit as the boot overlay, if any)
+    Note over DC: .ssr-layer is now hidden via CSS —<br/>only once the desktop actually exists<br/>(set in the effect right after the commit that mounts the boot overlay, if any)
 
     alt already booted this session, OR reduced motion
         DC->>DC: showBoot = false
