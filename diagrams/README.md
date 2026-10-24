@@ -7,7 +7,7 @@ shape of the decisions, that log explains the reasoning behind them.
 | Diagram | Shows |
 | --- | --- |
 | [`overview.md`](overview.md) | Start here — the whole site in one diagram, linking out to the rest |
-| [`c4-context.md`](c4-context.md) | Where this site sits relative to its visitors and its two external dependencies |
+| [`c4-context.md`](c4-context.md) | Where this site sits relative to its visitors and the external systems it depends on or embeds |
 | [`c4-container.md`](c4-container.md) | The high-level pieces inside the app and how they depend on each other |
 | [`dual-layer-architecture.md`](dual-layer-architecture.md) | The one rule that matters: SSR content and desktop chrome rendering the same components |
 | [`class-diagram.md`](class-diagram.md) | The actual TypeScript shapes behind the store and app registry, and how they relate |

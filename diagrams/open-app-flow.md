@@ -6,7 +6,7 @@ desktop layer already hydrated. Both paths converge on the same `openApp()`.
 ```mermaid
 sequenceDiagram
     actor V as Visitor
-    participant IG as IconGrid / Taskbar
+    participant IG as IconGrid / Start menu / Taskbar
     participant A as apps.tsx (registry)
     participant WS as windowStore
     participant FW as FloatingWindow
@@ -16,7 +16,7 @@ sequenceDiagram
     A->>A: getAppDef("about")
 
     alt def.launch is set (screen-takeover app, e.g. screensaver)
-        A->>A: def.launch() — bypasses windowing entirely
+        A->>A: def.launch() → screensaverStore.launch({ manual: true })
         Note over A: never becomes a window or<br/>a taskbar button
     else def.w/h/render is set (normal app)
         A->>A: remember trigger element (triggers map)
@@ -43,9 +43,11 @@ sequenceDiagram
     B->>DC: hydrate, read window.location.pathname
     DC->>A: appIdForPath("/projects/blitzcast")
     A-->>DC: "project:blitzcast"
+    Note over DC: The project write-up window — the embedded<br/>blitzcast app has no route, so no URL opens it
     DC->>A: openApp("projects") — parent window first
     DC->>A: openApp("project:blitzcast")
-    Note over DC: Focused window drives the URL too —<br/>a focus change replaceState()s the path,<br/>so views stay shareable both directions
+    Note over DC: No match on "/" opens "about" (≥768px only)
+    Note over DC: Focused window drives the URL too —<br/>a focus change replaceState()s the path,<br/>so views stay shareable both directions<br/>(apps with no route leave it unchanged)
 ```
 
 **Mobile takes a different last step, not a different flow:** below 768px, `apps.tsx` and
@@ -63,4 +65,4 @@ keeps the taskbar/route mapping one-to-one. See "Window id === appId" in `DECISI
 budget in `CLAUDE.md`.
 
 ---
-_Last updated: 2026-09-14 · reflects v1.1.2_
+_Last updated: 2026-10-23 · reflects v1.2.1_

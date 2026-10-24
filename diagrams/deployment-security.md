@@ -64,4 +64,4 @@ support them) and secret-scanning push protection are enabled at the repo level.
 See `SECURITY.md` for the reporting policy and scope.
 
 ---
-_Last updated: 2026-10-23 · reflects v1.2.0_
+_Last updated: 2026-10-23 · reflects v1.2.1_

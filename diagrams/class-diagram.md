@@ -56,7 +56,7 @@ classDiagram
         +boolean active
         +boolean pending
         +number pointerGraceUntil
-        +Saver?
+        +ComponentType? Saver
         +launch(opts) void
         +exit() void
     }
@@ -76,6 +76,7 @@ classDiagram
     }
     class Links {
         +string? repo
+        +string? siteRepo
         +string? live
         +string? npm
     }
@@ -109,4 +110,4 @@ window store only ever holds the `Win` shell around it (id `"project:<slug>"`), 
 of the project data itself.
 
 ---
-_Last updated: 2026-09-14 · reflects v1.1.2_
+_Last updated: 2026-10-23 · reflects v1.2.1_

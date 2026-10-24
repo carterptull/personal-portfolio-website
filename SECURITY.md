@@ -21,6 +21,9 @@ Please **do not** open a public GitHub issue for a security vulnerability. Use G
 vulnerability reporting:
 [github.com/carterptull/personal-portfolio-website/security/advisories/new](https://github.com/carterptull/personal-portfolio-website/security/advisories/new).
 
+The same link is published for scanners and researchers at
+[`/.well-known/security.txt`](https://www.cartertull.com/.well-known/security.txt) (RFC 9116).
+
 Expect an acknowledgement within 7 days. This is a personal project maintained in spare time —
 there is no bug bounty, and no SLA beyond a good-faith effort to fix real issues promptly.
 

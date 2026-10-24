@@ -44,4 +44,4 @@ on for SEO. If you disable JavaScript right now, every page still works.
 | How is this deployed and secured? | [`deployment-security.md`](deployment-security.md) |
 
 ---
-_Last updated: 2026-09-14 · reflects v1.1.2_
+_Last updated: 2026-10-23 · reflects v1.2.1_

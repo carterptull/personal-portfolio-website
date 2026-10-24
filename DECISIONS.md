@@ -311,6 +311,18 @@ change merges, then the embed is checked on cartertull.com after deploy — a bl
 blank, with no fallback content.
 `src/lib/csp.test.ts` pins `frame-src` so a future edit can't drop or widen it unnoticed.
 
+## `security.txt` expires, and CI enforces renewing it
+
+`public/.well-known/security.txt` follows RFC 9116. Its `Contact` is the private vulnerability
+reporting link from `SECURITY.md` rather than an email address, so no mailbox is published.
+`Canonical` is the `www` host, because the apex redirects there. **Why `Expires` is enforced:**
+the RFC requires it, and a file that quietly goes stale is worse than none, since scanners treat an
+expired one as unmaintained. `src/lib/securityTxt.test.ts` fails once `Expires` is within 30 days,
+so CI is the renewal reminder. **To renew:** move the date in the file to at most a year out.
+**Alternative:** a scheduled GitHub Action that opens an issue — more moving parts for the same
+nudge. **Consequence:** an unrelated PR can go red in the month before expiry; that is the
+intended signal, not a regression.
+
 ## Framing headers are `'self'`/`SAMEORIGIN`, not `'none'`/`DENY`
 **Why:** the header block applies to `/:path*`, which includes `/Carter-Tull-Resume.pdf`. Chrome
 renders a PDF `<object>` through an internal viewer frame, so `'none'`/`DENY` left the resume

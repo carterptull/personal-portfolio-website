@@ -7,7 +7,7 @@ overlay, never a loader" entry in `DECISIONS.md`.
 ```mermaid
 sequenceDiagram
     actor V as Visitor
-    participant S as Next.js server
+    participant S as Vercel CDN (prerendered)
     participant B as Browser (paint)
     participant DB as DesktopBoundary
     participant DC as DesktopChrome
@@ -20,29 +20,28 @@ sequenceDiagram
 
     B->>DB: Hydrate — dynamic import, ssr:false
     DB->>DC: mount DesktopChrome
-    DC->>SS: read "booted", read prefers-reduced-motion
+    DC->>SS: read "booted" (reduced motion via matchMedia)
+    DC->>DC: mount effect → document.body.classList.add("desktop-active")
+    Note over DC: .ssr-layer is now hidden via CSS —<br/>only once the desktop actually exists<br/>(set in the effect right after the commit that mounts the boot overlay, if any)
 
     alt already booted this session, OR reduced motion
         DC->>DC: showBoot = false
         Note over DC: Desktop renders immediately,<br/>no overlay at all
     else first visit this session, motion OK
-        DC->>BS: render BootScreen overlay (z-50, on top of .ssr-layer)
+        DC->>BS: render BootScreen overlay (fixed, z-index 9500, over the desktop)
         loop 5 BIOS lines, 220ms apart
             BS->>V: print next line
         end
         BS->>V: show splash (logo + progress bar), ~1.3s
         alt visitor clicks "Skip"
             V->>BS: click Skip
-        else timer completes (DONE_AT ≈ 2.4s total)
+        else timer completes (DONE_AT ≈ 2.7s total)
             BS->>BS: onDone timer fires
         end
-        BS->>SS: write "booted" = "1"
-        BS->>DC: onDone() → setBooted(true)
-        DC->>DC: unmount BootScreen
+        BS->>DC: onDone() → finishBoot()
+        DC->>SS: write "booted" = "1"
+        DC->>DC: setBooted(true) → unmount BootScreen
     end
-
-    DC->>DC: document.body.classList.add("desktop-active")
-    Note over DC: .ssr-layer is now hidden via CSS —<br/>only once the desktop actually exists
 ```
 
 **Why LCP isn't affected by any of this:** the server-rendered content is already painted
@@ -58,4 +57,4 @@ this architecture exists to serve. It only disappears once `DesktopChrome` has a
 mounted client-side and has somewhere else to put the same content.
 
 ---
-_Last updated: 2026-09-14 · reflects v1.1.2_
+_Last updated: 2026-10-23 · reflects v1.2.1_
