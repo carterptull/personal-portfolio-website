@@ -50,8 +50,9 @@ requirement: verify any CSP edit against `npm run build && npx next start` in a 
 `'self'` and `https://www.youtube-nocookie.com`) — the Blitzcast and Ampline windows iframe those
 live sites. An embed needs both ends: this site's `frame-src`, and a `frame-ancestors` on the
 target listing this site's origins (ampline.js.org's `frame-ancestors` is set, in
-ampline-website 0.3.1, to allow `https://cartertull.com` and `https://www.cartertull.com`). Either side missing renders a blank frame with no fallback, so
-verify both against production. `src/lib/csp.test.ts` pins this site's side.
+ampline-website 0.3.1, to allow `https://cartertull.com` and `https://www.cartertull.com`).
+Either side missing renders a blank frame with no fallback, so verify both against production.
+`src/lib/csp.test.ts` pins this site's side.
 
 ## Why the attack surface is this small
 

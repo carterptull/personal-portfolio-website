@@ -34,7 +34,8 @@ of it. Also clears three published Next.js advisories.
 - Companion change, in the ampline-website repo (0.3.1): ampline.js.org's own `frame-ancestors`
   moved from `'none'` to `https://cartertull.com https://www.cartertull.com`. Without it the
   embed renders blank.
-- Docs: `CLAUDE.md`, `DECISIONS.md`, and the context and deployment diagrams updated for the above.
+- Docs: `CLAUDE.md`, `DECISIONS.md`, `SECURITY.md` (its stale `frame-ancestors 'none'` sentence now
+  says `'self'`), and the context and deployment diagrams updated for the above.
 
 ### Security
 - `next` and `eslint-config-next` 16.4.0 → 16.4.3, clearing three published Next.js advisories:

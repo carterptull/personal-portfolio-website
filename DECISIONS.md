@@ -306,8 +306,9 @@ applies to that one iframe — it doesn't widen the portfolio's own `Permissions
 **Consequence:** `frame-src` adds `https://ampline.js.org`, and ampline-website 0.3.1's
 `vercel.json` `frame-ancestors` (previously `'none'`) lists both `https://cartertull.com` and
 `https://www.cartertull.com` — both origins, since the apex and `www` are separate origins to a
-framing check. Both ends must be verified against production before merge, because a blocked
-frame fails blank.
+framing check. The order matters: ampline.js.org's header is confirmed live before the portfolio
+change merges, then the embed is checked on cartertull.com after deploy — a blocked frame fails
+blank, with no fallback content.
 `src/lib/csp.test.ts` pins `frame-src` so a future edit can't drop or widen it unnoticed.
 
 ## Framing headers are `'self'`/`SAMEORIGIN`, not `'none'`/`DENY`
