@@ -6,6 +6,33 @@ follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.2.1] — 2026-10-23
+
+Maintenance release with no visitor-facing changes: a `security.txt`, one dependency advisory, and
+seven diagrams brought back in line with the code.
+
+### Added
+- `/.well-known/security.txt` (RFC 9116). `Contact` is the private vulnerability reporting link from
+  `SECURITY.md`, and `Canonical` is the `www` host. `src/lib/securityTxt.test.ts` checks the required
+  fields and fails once `Expires` is within 30 days, so CI is the renewal reminder (see `DECISIONS.md`).
+- `AGENTS.md`, the Next.js agent-rules file `next dev` writes. Committed so it stops appearing as an
+  untracked file.
+
+### Security
+- `zod` 4.6.5 → 4.6.7, a transitive dependency of `eslint-config-next` (via
+  `eslint-plugin-react-hooks`), clearing GHSA-mrhx-c7xc-m3w5 (high, memory exhaustion validating
+  oversized constrained collections). It runs at lint time only and is not in the production bundle.
+  `npm audit` now reports 0 vulnerabilities.
+
+### Changed
+- Diagrams: `boot-sequence`, `c4-container`, `class-diagram`, `dual-layer-architecture`,
+  `open-app-flow`, `overview`, and `window-lifecycle-state` were re-verified against the code and
+  re-stamped v1.2.1. Fixes include the boot sequence's timing and where the booted flag is written, the
+  screensaver launch grace, the window-only apps (Blitzcast, Ampline, Resume, Media Player), the
+  Maximized → Minimized transition, and `Links.siteRepo`. `README.md` there no longer says the context
+  diagram has two external dependencies. Every Mermaid block parses with Mermaid 11.4.1.
+- `SECURITY.md` links the new `security.txt`.
+
 ## [1.2.0] — 2026-10-23
 
 Ampline gets the same treatment Blitzcast has: a desktop app that embeds its live site, ampline.js.org,
