@@ -91,6 +91,9 @@ Key modules:
   `typescript` on `^6` (until `typescript-eslint` widens `<6.1.0`), and `eslint` on `^9` (until
   `eslint-config-next`'s react/import/jsx-a11y plugins widen their `<=9` peers).
   `.github/dependabot.yml` ignores the blocked versions. Rationale in `DECISIONS.md`.
+- `package.json` `overrides` (`next` → `postcss`, `minimatch` → `^11`) clear advisories whose fix no
+  dependency's declared range allows. Don't remove one without re-running `npm audit`; the revisit
+  conditions are in `DECISIONS.md`.
 
 ## Adding a project later
 

@@ -108,11 +108,11 @@ decision; one source of truth prevents drift.
 build; avoids dev-console noise and pointless requests. Cookieless, so no consent banner.
 
 ## three's `Clock` deprecation warning: filtered at the source, three stays current
-`@react-three/fiber` (9.8.1, the latest stable) still does `new THREE.Clock()` internally, which
+`@react-three/fiber` (9.8.2, the latest stable) still does `new THREE.Clock()` internally, which
 three r183 deprecated in favor of `THREE.Timer`, so every screensaver mount logged
 `THREE.Clock: This module has been deprecated`. The old fix was to pin three to ~0.182, but the
-pin was lifted in 1.1.2 (three is now ~0.186) and this entry went stale — the warning was back
-and nobody noticed. **Now:** `PipesScreensaver` registers three's own `setConsoleFunction` hook
+pin was lifted in 1.1.2 (three is now ~0.187, which still ships `Clock`) and this entry went
+stale — the warning was back and nobody noticed. **Now:** `PipesScreensaver` registers three's own `setConsoleFunction` hook
 at module load and drops exactly that one warning (`src/lib/threeConsole.ts`, unit-tested);
 every other three message is forwarded to `console` unchanged. **Why:** pinning three to 0.182
 trades away four minors of fixes and fights Dependabot's `three` group, for a message that is
@@ -131,15 +131,31 @@ surfaced after the original override was written. **Why:** clears `npm audit` wi
 no longer needed to clear the CVEs. It stays because it dedupes Next onto the top-level
 `postcss` (one copy in the tree), and removing it would reintroduce a nested copy.
 
-## Accepted: unpatched dev-only `braces` advisory
-`npm audit` flags `braces` ≤3.0.3 (GHSA-vfj7-8cjw-p6xm, stack-exhaustion DoS on deeply nested
-patterns). No patched `braces` exists on npm (3.0.3 is the latest), so there is nothing to
-upgrade to. It is reached only via `eslint-config-next` → `fast-glob` → `micromatch` → `braces`,
-i.e. lint tooling that runs on this repo's own files. `npm audit --omit=dev` is clean, so nothing
-vulnerable ships to the site. **Alternatives rejected:** `npm audit fix --force` proposes
-downgrading `eslint-config-next` to 14.2.35, which would break lint on Next 16; a `braces`
-override has no safe target. **To revisit:** when `micromatch` or `fast-glob` drops `braces`,
-or a patched `braces` is published. Re-checked 2026-10-12: still 3.0.3, still no fix.
+## npm override: minimatch to 11 for a dev-only advisory nothing else can fix
+`npm audit` flagged 16 moderate findings on 2026-11-03, all from one root cause: `minimatch`
+below 11.0.1 (GHSA-g3hv-75wg-m249, denial of service through glob-pattern amplification,
+published 2026-10-30). It is reached only through the lint toolchain (`eslint`, `@eslint/*`,
+`typescript-eslint`, and the react/import/jsx-a11y plugins), so `npm audit --omit=dev` stayed
+clean and nothing vulnerable ships to the site. No release can fix it by upgrading: `eslint` 9
+depends on `^3.1.5`, `eslint` 10.14 on `^10.2.6`, `@typescript-eslint/typescript-estree` on
+`^10.2.2`, `eslint-plugin-import` on `^3.1.2`, and the patch exists only in 11.x. npm's own
+suggested fixes (`eslint@4.0.0`, `eslint-config-next@0.2.4`) are downgrades that would break lint.
+**Now:** `"overrides": {"minimatch": "^11.0.1"}`, the same mechanism as the `postcss` override
+above. **Why this crosses majors when the ESLint 10 entry below refuses to:** that one is a
+declared-peer mismatch that leaves `npm ls` permanently invalid; this one leaves `npm ls` clean,
+and the risk is checkable. Checked against the original tree: identical findings on a file seeded
+with next, jsx-a11y, typescript-eslint, and react-hooks violations, the same 58 files linted,
+ignores honored, no fatal errors. Any future incompatibility fails `npm run lint` in CI, loudly,
+rather than breaking the site. **Alternative rejected:** leave it and dismiss the alert — leaves
+`npm audit` red indefinitely for something fixable. **To revisit:** remove the override once
+`eslint`, `typescript-estree`, and `eslint-plugin-import` all depend on `minimatch` ≥11.0.1, then
+confirm `npm audit` stays clean.
+
+## The `braces` advisory was withdrawn, not fixed
+1.1.4 recorded `braces` ≤3.0.3 (GHSA-vfj7-8cjw-p6xm) as an accepted dev-only risk because no
+patched release existed. GitHub withdrew the advisory on 2026-10-23, so `npm audit` no longer
+reports it. `braces` 3.0.3 is still in the tree (`eslint-config-next` → `fast-glob` →
+`micromatch`); nothing was changed for it.
 
 ## ESLint stays on 9 even though 9.x is deprecated
 `npm ci` prints `deprecated eslint@9.39.5: This version is no longer supported` — ESLint 9 is in

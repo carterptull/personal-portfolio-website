@@ -61,8 +61,9 @@ through Vercel and where the CSP's exceptions below come from.
   updates (`.github/dependabot.yml`) are enabled. The config ignores `react` 19.4+,
   `typescript` 7+, and `eslint` 10+ because upstream peer ranges (`@react-three/fiber`,
   `typescript-eslint`, `eslint-config-next`'s plugins) don't support them yet — see
-  `DECISIONS.md`. `npm audit --omit=dev` is the production signal; the remaining dev-only
-  advisory (`braces`, no patched release) is documented there too.
+  `DECISIONS.md`. `npm audit --omit=dev` is the production signal; `npm audit` over the whole tree
+  is also clean, with `overrides` (`postcss`, `minimatch`) covering advisories whose fixes no
+  dependency's declared range allows. Both are documented there.
 - **Secrets:** none in source. The only environment variable, `NEXT_PUBLIC_SITE_URL`, is a public
   value by design. Secret scanning with push protection is enabled on the repository.
 - **CI:** every push and pull request to `main` must pass lint, tests, and build; the workflow runs with
