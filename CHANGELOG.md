@@ -6,6 +6,37 @@ follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.2.2] — 2026-11-03
+
+Dependency maintenance with no visitor-facing changes. Clears the one advisory `npm audit` reports and
+folds in the four open Dependabot PRs (#52, #54, #55, #56) plus the in-range patch updates they did not
+cover, as one reviewed change instead of four separate merges.
+
+### Security
+- **`minimatch` forced to 11.0.4 via `overrides`** (GHSA-g3hv-75wg-m249, published 2026-10-30:
+  denial of service through glob-pattern amplification, affects every release below 11.0.1). It was
+  the single root cause of the 16 moderate findings `npm audit` reported (`eslint`, `@eslint/*`,
+  `typescript-eslint`, and the react/import/jsx-a11y plugins all reach it). It is lint tooling only
+  and never ships to the site, and no consumer's declared range allows the fix (`eslint` 9 wants
+  `^3.1.5`, `eslint` 10.14 wants `^10.2.6`), so an override was the only route. Lint was
+  checked against the original tree: identical findings on a file seeded with violations from the
+  next, jsx-a11y, typescript-eslint, and react-hooks rule families, the same 58 files linted, ignores
+  still honored, no fatal errors. `npm audit` now reports 0 vulnerabilities, with and without
+  `--omit=dev`. See `DECISIONS.md`.
+- The `braces` advisory (GHSA-vfj7-8cjw-p6xm) that 1.1.4 recorded as accepted is no longer reported:
+  GitHub withdrew it on 2026-10-23. `braces` 3.0.3 is still in the tree.
+
+### Changed
+- `next` and `eslint-config-next` 16.4.3 → 16.4.5, `tailwindcss` and `@tailwindcss/postcss`
+  4.3.3 → 4.3.4 (in-range patch updates).
+- `react`/`react-dom` 19.3.0 → 19.3.1 (#52); `zustand` 5.0.15 → 5.0.16 (#54).
+- `three` 0.186.1 → 0.187.0 and `@react-three/fiber` 9.8.1 → 9.8.2 (#55), with `@types/three`
+  moved to 0.187 to match. three 0.187 still ships `THREE.Clock`, and fiber 9.8.2 still constructs it,
+  so the warning filter stays; the screensaver was checked in Chrome on the new versions.
+- `@types/node` 26.6.4 → 26.6.6 and `postcss` 8.5.29 → 8.5.32 (#56).
+- `deployment-security` diagram re-verified and re-stamped; the other diagrams describe architecture
+  this release doesn't touch.
+
 ## [1.2.1] — 2026-10-23
 
 Maintenance release with no visitor-facing changes: a `security.txt`, one dependency advisory, and
