@@ -6,6 +6,28 @@ follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.2.3] — 2026-11-19
+
+Dependency maintenance with no visitor-facing changes. Folds the four open Dependabot PRs (#58, #59,
+#60, #61) and one in-range patch they did not cover into a single reviewed change.
+
+There are no security fixes in this release. `npm audit` reported 0 vulnerabilities before and after,
+GitHub had no open Dependabot alerts, and the `next` 16.4.6 release notes list bug-fix backports only.
+
+### Changed
+- `next` and `eslint-config-next` 16.4.5 → 16.4.6 (#59): backported bug fixes (route-handler response
+  compression, Turbopack dev GC fixes).
+- `tailwindcss` and `@tailwindcss/postcss` 4.3.4 → 4.3.5 (#60).
+- `zustand` 5.0.16 → 5.1.0 (#61), which backs the window manager and screensaver stores.
+- `@vercel/speed-insights` 2.0.0 → 2.1.0 (#58).
+- `postcss` 8.5.32 → 8.5.33 (in-range; no PR).
+- Verified on a production build: lint, all 14 tests, and `next build` pass; every route and the
+  security headers respond as before; in Chrome the desktop renders, windows open and route-sync
+  (the `zustand` path), and the 3D Pipes screensaver mounts, survives the launch grace, and closes on
+  a keypress with a clean console.
+- `deployment-security` diagram re-stamped; the other diagrams describe architecture this release
+  doesn't touch.
+
 ## [1.2.2] — 2026-11-03
 
 Dependency maintenance with no visitor-facing changes. Clears the one advisory `npm audit` reports and
